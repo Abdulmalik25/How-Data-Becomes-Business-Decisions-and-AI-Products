@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Data Becomes Business Decisions & AI Products</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── TOP HEADER ── -->
+  <header id="app-header">
+    <h1>
+      How Data Becomes
+      <span class="accent-purple">Business Decisions</span>
+      and
+      <span class="accent-amber">AI Products</span>
+    </h1>
+    <p class="subtitle">From College to Corporate · University Workshop · Interactive Architecture</p>
+  </header>
+
+  <!-- ── PROGRESS BAR ── -->
+  <nav id="progress-bar"></nav>
+
+  <!-- ── MAIN BODY ── -->
+  <div id="main-body">
+
+    <!-- ── SVG CANVAS ── -->
+    <div id="canvas-wrapper">
+      <svg id="ecosystem-svg" viewBox="0 0 1060 710" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+            <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#f1f5f9" stroke-width="0.7" />
+          </pattern>
+          <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8" />
+          </marker>
+        </defs>
+        <rect width="1060" height="710" fill="url(#grid)" />
+        <g id="svg-labels"></g>
+        <g id="svg-banner"></g>
+        <g id="svg-paths"></g>
+        <g id="svg-particles"></g>
+        <g id="svg-nodes"></g>
+        <g id="svg-career-bar"></g>
+        <g id="impact-glow"></g>
+      </svg>
+
+      <!-- Career cards (outside SVG) -->
+      <div id="career-cards-strip"></div>
+    </div>
+
+    <!-- ── SIDE PANEL ── -->
+    <aside id="side-panel"></aside>
+  </div>
+
+  <!-- ── BOTTOM CONTROLS ── -->
+  <footer id="controls">
+    <button id="btn-reset" class="ctrl-btn secondary">↺ Reset</button>
+    <button id="btn-prev" class="ctrl-btn secondary">← Prev</button>
+    <div id="step-counter">Intro</div>
+    <button id="btn-next" class="ctrl-btn primary">Next →</button>
+    <button id="btn-auto" class="ctrl-btn dark">▶ Play All</button>
+    <div class="kbd-hint">
+      <kbd>→</kbd>/<kbd>←</kbd><kbd>Space</kbd><kbd>R</kbd>
+    </div>
+  </footer>
+
+  <!-- ── CAREER DETAIL MODAL ── -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box">
+      <div id="modal-header">
+        <div>
+          <div id="modal-icon"></div>
+          <h2 id="modal-title"></h2>
+          <p id="modal-question"></p>
+        </div>
+        <button id="modal-close">✕ Close</button>
+      </div>
+      <div id="modal-body">
+        <div class="modal-col">
+          <div class="section-label">What they do</div>
+          <p id="modal-what" class="desc"></p>
+          <div class="section-label">Why companies need them</div>
+          <p id="modal-why" class="desc"></p>
+          <div class="section-label">Real Example</div>
+          <div id="modal-example" class="example-box"></div>
+          <div class="section-label">Salary Range</div>
+          <p id="modal-salary" class="desc salary"></p>
+          <div class="section-label">Who Hires</div>
+          <p id="modal-hires" class="desc"></p>
+        </div>
+        <div class="modal-col">
+          <div class="section-label">Skills Required</div>
+          <div id="modal-skills" class="tag-group"></div>
+          <div class="section-label">Tools Used</div>
+          <div id="modal-tools" class="tag-group"></div>
+          <div class="section-label">Typical Day</div>
+          <div id="modal-daybar"></div>
+          <div class="section-label" style="margin-top:12px">Learning Path</div>
+          <div id="modal-learning"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
