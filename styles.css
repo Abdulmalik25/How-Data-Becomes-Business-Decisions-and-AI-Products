@@ -9,7 +9,9 @@
   --border-strong: #cbd3e3;
   --ink:        #101425;
   --ink-soft:   #4a5170;
-  --ink-faint:  #8890ab;
+  --ink-faint:  #5f6680;   /* darkened from #8890ab — was failing WCAG AA (2.96:1); now 4.4-5.3:1 on paper/cream */
+  --ink-faint-on-dark: #a6acc2; /* solid AA-safe alternative to translucent white on dark backgrounds (8.1:1) */
+  --c-eyebrow-text: #4f46e5; /* darkened engineer indigo for small text use only - 5.87:1 on paper vs 4.17:1 for --c-engineer */
 
   /* Role accent colors — the site's signature color system */
   --c-architect:  #0f766e;
@@ -90,7 +92,7 @@ button { font-family: inherit; }
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--c-engineer);
+  color: var(--c-eyebrow-text);
   margin-bottom: 10px;
 }
 
@@ -521,7 +523,7 @@ button { font-family: inherit; }
 }
 
 .output-badge { color: white; border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 12px; }
-.next-stage { font-size: 12.5px; color: var(--c-engineer); font-weight: 600; margin-bottom: 12px; }
+.next-stage { font-size: 12.5px; color: var(--c-eyebrow-text); font-weight: 600; margin-bottom: 12px; } /* was --c-engineer at 4.17:1, borderline AA fail for 12.5px text */
 
 .resp-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
 .resp-bullet { font-weight: 900; font-size: 13px; margin-top: 1px; flex-shrink: 0; }
@@ -712,7 +714,7 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
   color: rgba(255,255,255,0.5); font-size: 12.5px;
 }
 #site-footer p { margin-bottom: 4px; }
-.footer-disclaimer { font-style: italic; color: rgba(255,255,255,0.35); }
+.footer-disclaimer { font-style: italic; color: var(--ink-faint-on-dark); } /* was rgba(255,255,255,0.35) = 3.21:1 effective, failed AA; solid color now 8.1:1 */
 
 /* ══════════════════════════════════════════════
    SLIDE-IN ANIMATION FOR PANEL CONTENT
