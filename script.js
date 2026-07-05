@@ -640,8 +640,10 @@ function renderCareerStrip(s) {
   strip.classList.add("visible");
 
   CAREERS.forEach(c => {
-    const card = document.createElement("div");
+    const card = document.createElement("button");
+    card.type = "button";
     card.className = "career-card" + (state.selectedCareer === c.key ? " selected" : "");
+    card.setAttribute("aria-label", `View ${ROLE_DATA[c.key].title} details`);
     card.style.setProperty("--card-color", c.color);
     card.style.borderColor = state.selectedCareer === c.key ? c.color : "";
     card.style.background = state.selectedCareer === c.key ? c.color + "15" : "";
@@ -744,6 +746,25 @@ function openModal(roleKey) {
   document.getElementById("modal-close").focus();
 }
 
+function getModalFocusableElements() {
+  return Array.from(document.querySelectorAll("#modal-overlay button, #modal-overlay [href], #modal-overlay input, #modal-overlay select, #modal-overlay textarea, #modal-overlay [tabindex]:not([tabindex='-1'])"))
+    .filter(el => !el.disabled && el.offsetParent !== null);
+}
+
+function trapModalFocus(e) {
+  const focusable = getModalFocusableElements();
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
 function closeModal() {
   document.getElementById("modal-overlay").classList.add("hidden");
   if (lastFocusedEl && lastFocusedEl.focus) lastFocusedEl.focus();
@@ -783,9 +804,9 @@ function renderSidePanel() {
   const color = stepData?.color || "#6366f1";
 
   const tabsHTML = role ? `
-    <div class="panel-tabs">
+    <div class="panel-tabs" role="tablist" aria-label="Step details">
       ${["story", "skills", "day", "career"].map(t => `
-        <button class="panel-tab${state.activeTab === t ? " active" : ""}" data-tab="${t}" style="${state.activeTab === t ? `--tab-color:${color}` : ""}">${t}</button>`).join("")}
+        <button class="panel-tab${state.activeTab === t ? " active" : ""}" data-tab="${t}" role="tab" aria-selected="${state.activeTab === t}" style="${state.activeTab === t ? `--tab-color:${color}` : ""}">${t}</button>`).join("")}
     </div>
   ` : "";
 
@@ -1089,6 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("keydown", (e) => {
     const overlayOpen = !document.getElementById("modal-overlay").classList.contains("hidden");
+    if (overlayOpen && e.key === "Tab") { trapModalFocus(e); return; }
     if (e.key === "Escape") { closeModal(); return; }
     if (overlayOpen) return;
     if (e.key === "ArrowRight") next();
