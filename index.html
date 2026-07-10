@@ -58,7 +58,7 @@
       <a href="#tour" class="btn btn-primary" id="hero-start-btn">Start the Interactive Tour →</a>
       <a href="#compare" class="btn btn-ghost">See role comparison</a>
     </div>
-    <p class="hero-meta">8 roles · 15 steps · built for students, freshers &amp; working professionals</p>
+    <p class="hero-meta">7 roles · one value chain · built for students, freshers &amp; working professionals</p>
   </div>
 </header>
 
@@ -71,7 +71,7 @@
   <div class="why-grid">
     <div class="why-text">
       <p>Most explanations teach data careers as a list: "here's what a Data Analyst does, here's what a Data Scientist does." That's why so many students and career-switchers get stuck picking a role — they're comparing job titles with no sense of how the work actually connects.</p>
-      <p>In reality, every role sits on the same pipeline. A Data Engineer's pipeline feeds an Analytics Engineer's models, which feed an Analyst's report and a Scientist's prediction, which an AI Engineer turns into a product a customer actually touches. Understanding <em>where you'd sit in that flow</em> — not just what the title sounds like — is what makes a career choice make sense.</p>
+      <p>In reality, every role sits on the same value chain. A Data Engineer creates reliable pipelines and data layers, Analysts and BI Developers turn trusted data into insight, Data Scientists and ML Engineers turn it into predictive systems, and AI Engineers turn company data and knowledge into AI products. Understanding <em>where you'd sit in that flow</em> — not just what the title sounds like — is what makes a career choice make sense.</p>
     </div>
     <div class="why-diagram" aria-hidden="true">
       <svg viewBox="0 0 260 160" class="why-svg">
@@ -108,58 +108,115 @@
 <section id="tour" aria-labelledby="tour-heading">
   <div class="tour-intro">
     <p class="section-eyebrow">The interactive tour</p>
-    <h2 id="tour-heading">Follow the data, step by step</h2>
-    <p class="tour-disclaimer"><strong>Note:</strong> the "example" in each step is an illustrative composite based on common industry patterns — not a real company case study.</p>
+    <h2 id="tour-heading">Follow the data value chain</h2>
+    <p class="tour-copy">Data roles are not isolated job titles. They are connected responsibilities across one data value chain.</p>
+    <p class="tour-disclaimer"><strong>Note:</strong> this is a simplified typical flow, not a rigid rule every company follows. Examples are illustrative composites, not real company case studies.</p>
   </div>
 
-  <!-- PROGRESS BAR -->
-  <nav id="progress-bar" aria-label="Tour progress"></nav>
-
-  <!-- MAIN BODY -->
-  <div id="main-body">
-
-    <!-- SVG CANVAS -->
-    <div id="canvas-wrapper">
-      <svg id="ecosystem-svg" viewBox="0 0 1140 740" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="svg-title svg-desc">
-        <title id="svg-title">Data ecosystem pipeline diagram</title>
-        <desc id="svg-desc">An animated diagram showing data flowing from source systems through a pipeline, into Bronze, Silver, and Gold data layers, then to the Data Architect, Data Engineer, and Analytics Engineer who build the platform, on to the Data Analyst, BI Developer, and Data Scientist who consume it, then to the ML Engineer and AI Engineer, and finally to business impact.</desc>
-        <defs>
-          <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
-            <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#eef1f6" stroke-width="0.7" />
-          </pattern>
-          <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8" />
-          </marker>
-        </defs>
-        <rect width="1140" height="740" fill="url(#grid)" />
-        <g id="svg-labels"></g>
-        <g id="svg-banner"></g>
-        <g id="svg-paths"></g>
-        <g id="svg-particles"></g>
-        <g id="svg-nodes"></g>
-        <g id="svg-career-bar"></g>
-        <g id="impact-glow"></g>
-      </svg>
-
-      <!-- Career cards (outside SVG) -->
-      <div id="career-cards-strip"></div>
+  <div class="ecosystem-shell" aria-label="Interactive data ecosystem diagram">
+    <div class="ecosystem-legend" aria-label="Diagram legend">
+      <span><i class="legend-dot architect"></i> Architecture/Governance</span>
+      <span><i class="legend-dot engineer"></i> Data Engineering</span>
+      <span><i class="legend-dot analytics"></i> Analytics/BI</span>
+      <span><i class="legend-dot ml"></i> Machine Learning</span>
+      <span><i class="legend-dot ai"></i> AI Products</span>
+      <span><i class="legend-line dashed"></i> Responsibility zone</span>
+      <span><i class="legend-line solid"></i> System/output card</span>
     </div>
 
-    <!-- SIDE PANEL (stacks below canvas on mobile — never hidden) -->
-    <aside id="side-panel" aria-live="polite"></aside>
+    <div class="ecosystem-desktop" id="ecosystem-desktop">
+      <button class="zone-card architect-zone js-detail" type="button" data-detail="architect" aria-label="Open Data Architect details">
+        <span class="zone-kicker">Data Architect Zone</span>
+        <strong>Governance | Security | Architecture | Standards | Platform Strategy | Scalability</strong>
+        <span>Cross-cutting role: designs and guides the full data ecosystem.</span>
+      </button>
+
+      <div class="desktop-flow-grid">
+        <section class="solid-card sources-card" aria-labelledby="sources-title">
+          <span class="zone-kicker">Data Sources</span>
+          <h3 id="sources-title">Where data begins</h3>
+          <div class="pill-list">
+            <span>Apps</span><span>Databases</span><span>APIs</span><span>CRM</span><span>Payments</span><span>Events</span><span>Files</span><span>Spreadsheets</span><span>Documents</span>
+          </div>
+        </section>
+
+        <div class="flow-arrow horizontal" aria-hidden="true"><span></span></div>
+
+        <section class="zone-card engineer-zone" aria-labelledby="engineer-zone-title">
+          <div class="zone-heading">
+            <button class="role-chip js-detail" type="button" data-detail="engineer">Data Engineer</button>
+            <span>Pipelines | ETL/ELT | Orchestration | Data Quality | Cloud Storage | Lakehouse/Warehouse | Automation</span>
+          </div>
+          <div class="engineer-grid">
+            <div class="solid-card mini-card">
+              <span class="zone-kicker">Ingestion & Orchestration</span>
+              <h3 id="engineer-zone-title">Collect and move data</h3>
+              <div class="pill-list compact"><span>Batch</span><span>Streaming</span><span>CDC</span><span>Scheduling</span><span>Validation</span></div>
+            </div>
+            <div class="lakehouse-card solid-card">
+              <span class="zone-kicker">Data Lakehouse / Warehouse</span>
+              <div class="layer-row">
+                <button class="layer-card" type="button" data-story="Bronze stores raw data exactly as it arrives."><strong>Bronze</strong><span>Raw data</span></button>
+                <button class="layer-card" type="button" data-story="Silver cleans, validates, deduplicates, and standardizes data."><strong>Silver</strong><span>Cleaned and validated</span></button>
+                <button class="layer-card" type="button" data-story="Gold organizes business-ready data for analytics, ML, and AI products."><strong>Gold</strong><span>Business-ready</span></button>
+                <button class="layer-card semantic" type="button" data-story="The semantic layer defines trusted metrics, KPIs, and reusable business logic."><strong>Semantic Layer</strong><span>Metrics, KPIs, logic</span></button>
+              </div>
+            </div>
+          </div>
+          <p class="zone-output">Output: reliable pipelines, clean datasets, and business-ready data layers.</p>
+        </section>
+
+        <div class="flow-arrow horizontal" aria-hidden="true"><span></span></div>
+
+        <section class="branches-zone" aria-labelledby="branches-title">
+          <span class="zone-kicker">Output Branches</span>
+          <h3 id="branches-title">Trusted data becomes products, insights, and systems</h3>
+          <div class="branch-grid">
+            <article class="branch-card analytics-branch">
+              <span class="zone-kicker">Analytics/BI</span>
+              <div class="role-row">
+                <button class="role-chip js-detail" type="button" data-detail="analyst">Data Analyst</button>
+                <button class="role-chip js-detail" type="button" data-detail="bi">BI Developer</button>
+              </div>
+              <p>Uses Gold data, semantic layer, KPIs, and trusted metrics.</p>
+              <div class="pill-list compact"><span>Dashboards</span><span>Reports</span><span>KPIs</span><span>Business Insights</span><span>Recommendations</span></div>
+            </article>
+
+            <article class="branch-card ml-branch">
+              <span class="zone-kicker">Machine Learning</span>
+              <div class="role-row">
+                <button class="role-chip js-detail" type="button" data-detail="scientist">Data Scientist</button>
+                <button class="role-chip js-detail" type="button" data-detail="ml">ML Engineer</button>
+              </div>
+              <p>Uses Silver/Gold data, feature data, event logs, experiments, and external data.</p>
+              <div class="pill-list compact"><span>Predictive Models</span><span>Experiments</span><span>Forecasting</span><span>Segmentation</span><span>ML APIs</span><span>Monitoring</span></div>
+            </article>
+
+            <article class="branch-card ai-branch">
+              <span class="zone-kicker">AI Products</span>
+              <div class="role-row">
+                <button class="role-chip js-detail" type="button" data-detail="ai">AI Engineer</button>
+              </div>
+              <p>Uses Gold data, documents, APIs, knowledge sources, vector databases, and LLMs.</p>
+              <div class="pill-list compact"><span>Chatbots</span><span>RAG Apps</span><span>Copilots</span><span>Agents</span><span>AI Workflows</span><span>AI Products</span></div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <div class="flow-arrow downward" aria-hidden="true"><span></span></div>
+
+      <button class="outcomes-card js-detail" type="button" data-detail="stakeholders" aria-label="Open business stakeholders details">
+        <span class="zone-kicker">Business Outcomes</span>
+        <strong>Decisions | Revenue Growth | Cost Saving | Automation | Better Customer Experience</strong>
+        <span>Final consumers: Executives, Managers, Product Teams, Sales, Marketing, Operations, and Customers.</span>
+      </button>
+    </div>
+
+    <div class="ecosystem-mobile" id="ecosystem-mobile" aria-label="Mobile data ecosystem story"></div>
   </div>
 
-  <!-- BOTTOM CONTROLS -->
-  <div id="controls">
-    <button id="btn-reset" class="ctrl-btn secondary" aria-label="Reset tour to start">↺ Reset</button>
-    <button id="btn-prev" class="ctrl-btn secondary" aria-label="Previous step">← Prev</button>
-    <div id="step-counter" aria-live="polite">Intro</div>
-    <button id="btn-next" class="ctrl-btn primary" aria-label="Next step">Next →</button>
-    <button id="btn-auto" class="ctrl-btn dark" aria-label="Play all steps automatically">▶ Play All</button>
-    <div class="kbd-hint" aria-hidden="true">
-      <kbd>→</kbd>/<kbd>←</kbd><kbd>Space</kbd><kbd>R</kbd>
-    </div>
-  </div>
+  <div id="ecosystem-tooltip" role="status" aria-live="polite"></div>
 </section>
 
 <!-- ══════════════════════════════════════════════
@@ -167,8 +224,8 @@
 ══════════════════════════════════════════════ -->
 <section id="compare" class="section-wide">
   <p class="section-eyebrow">Role comparison</p>
-  <h2>Eight roles, one pipeline</h2>
-  <p class="section-lead">Same underlying skills stack — Excel, SQL, Python — branching into eight different jobs depending on how deep you go and which part of the pipeline you enjoy most.</p>
+  <h2>Seven roles, one value chain</h2>
+  <p class="section-lead">Same underlying skills stack — Excel, SQL, Python — branching into seven different jobs depending on how deep you go and which part of the data value chain you enjoy most.</p>
   <div id="compare-table-wrap"></div>
 </section>
 
@@ -216,25 +273,25 @@
     </div>
     <div id="modal-body">
       <div class="modal-col">
-        <div class="section-label">What they do</div>
+        <div class="section-label">Question this role answers</div>
         <p id="modal-what" class="desc"></p>
-        <div class="section-label">Why companies need them</div>
+        <div class="section-label">Day-to-day work</div>
         <p id="modal-why" class="desc"></p>
-        <div class="section-label">Illustrative Example</div>
+        <div class="section-label">Output they create</div>
         <div id="modal-example" class="example-box"></div>
-        <div class="section-label">Salary Range</div>
+        <div class="section-label">Beginner explanation</div>
         <p id="modal-salary" class="desc salary"></p>
-        <div class="section-label">Who Hires</div>
+        <div class="section-label">Where they sit</div>
         <p id="modal-hires" class="desc"></p>
       </div>
       <div class="modal-col">
-        <div class="section-label">Skills Required</div>
+        <div class="section-label">Tools / skills involved</div>
         <div id="modal-skills" class="tag-group"></div>
-        <div class="section-label">Tools Used</div>
+        <div class="section-label">Common tools</div>
         <div id="modal-tools" class="tag-group"></div>
-        <div class="section-label">Typical Day</div>
+        <div class="section-label">Work mix</div>
         <div id="modal-daybar"></div>
-        <div class="section-label" style="margin-top:12px">Learning Path</div>
+        <div class="section-label" style="margin-top:12px">Learning path</div>
         <div id="modal-learning"></div>
       </div>
     </div>
