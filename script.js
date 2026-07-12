@@ -520,6 +520,141 @@ function setActiveFlow(group) {
   });
 }
 
+
+const ECOSYSTEM_TOUR_STEPS = [
+  { key: "sources", label: "Data Sources", type: "section", selector: ".source-list", flow: "sources" },
+  { key: "ingestion", label: "Ingestion & Orchestration", type: "section", selector: ".ingestion-panel", flow: "ingestion" },
+  { key: "bronze", label: "Bronze Layer", type: "section", selector: "[data-map-key='bronze']", flow: "lakehouse" },
+  { key: "silver", label: "Silver Layer", type: "section", selector: "[data-map-key='silver']", flow: "lakehouse" },
+  { key: "gold", label: "Gold Layer", type: "section", selector: "[data-map-key='gold']", flow: "lakehouse" },
+  { key: "semantic", label: "Semantic Layer", type: "section", selector: "[data-map-key='semantic']", flow: "lakehouse" },
+  { key: "analyticsBranch", label: "Analytics / BI Branch", type: "section", selector: "[data-map-key='analyticsBranch']", flow: "analyticsBranch" },
+  { key: "mlBranch", label: "Machine Learning Branch", type: "section", selector: "[data-map-key='mlBranch']", flow: "mlBranch" },
+  { key: "aiBranch", label: "AI Products Branch", type: "section", selector: "[data-map-key='aiBranch']", flow: "aiBranch" },
+  { key: "stakeholders", label: "Business Outcomes", type: "role", selector: "[data-map-key='stakeholders']", flow: "stakeholders" },
+  { key: "architect", label: "Data Architect Zone", type: "role", selector: "[data-map-key='architect']", flow: "architect" },
+  { key: "engineer", label: "Data Engineer Responsibility", type: "role", selector: ".platform-owner", flow: "engineer" },
+  { key: "roleSummary", label: "Role Summary", type: "summary", selector: ".desktop-bottom-info", flow: "stakeholders" },
+  { key: "recap", label: "Final Ecosystem Recap", type: "section", selector: ".flow-map-v2", flow: "stakeholders" },
+];
+
+let ecosystemTourIndex = 0;
+let ecosystemPlayTimer = null;
+
+function getTourStepData(step) {
+  if (!step) return null;
+  if (step.type === "role") return getDetailData(step.key);
+  if (step.key === "roleSummary") {
+    return {
+      title: "Roles at a Glance",
+      color: COLORS.outcomes,
+      question: "Who does what across the connected ecosystem?",
+      work: "Each role owns a different responsibility in the same value chain: architecture, pipelines, insights, dashboards, models, deployment, AI products, and business consumption.",
+      output: "A clearer view of where every role contributes without confusing practitioners with final consumers.",
+      beginner: "Use this as the quick map before choosing which career path to study deeper.",
+    };
+  }
+  if (step.key === "recap") {
+    return {
+      title: "Final Ecosystem Recap",
+      color: COLORS.engineer,
+      question: "How does data become business value end to end?",
+      work: "Sources feed ingestion, ingestion feeds trusted platform layers, and those layers power analytics, machine learning, AI products, and business outcomes.",
+      output: "A simplified but realistic mental model of the modern data ecosystem.",
+      beginner: "Real companies vary, but the core idea stays the same: data becomes useful through connected responsibilities.",
+    };
+  }
+  if (["bronze", "silver", "gold", "semantic"].includes(step.key)) {
+    const layerNames = {
+      bronze: "Bronze Layer",
+      silver: "Silver Layer",
+      gold: "Gold Layer",
+      semantic: "Semantic Layer",
+    };
+    const layerMeanings = {
+      bronze: "Bronze keeps raw, unprocessed data from source systems.",
+      silver: "Silver cleans, validates, and standardizes raw data.",
+      gold: "Gold organizes business-ready data for reporting, ML, and decision support.",
+      semantic: "The semantic layer defines trusted metrics, KPIs, and reusable business logic.",
+    };
+    const base = getSectionData("lakehouse");
+    return { ...base, title: layerNames[step.key], work: layerMeanings[step.key] };
+  }
+  return getSectionData(step.key);
+}
+
+function scrollTourTargetIntoView(target) {
+  const viewport = document.getElementById("ecosystem-scroll-viewport");
+  const canvas = document.getElementById("ecosystem-desktop");
+  if (!viewport || !canvas || !target) return;
+  const targetRect = target.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+  const targetCenter = (targetRect.left - canvasRect.left) + (targetRect.width / 2);
+  const maxScroll = Math.max(0, canvas.scrollWidth - viewport.clientWidth);
+  const nextLeft = Math.max(0, Math.min(targetCenter - (viewport.clientWidth / 2), maxScroll));
+  viewport.scrollTo({ left: nextLeft, behavior: "smooth" });
+}
+
+function activateEcosystemTourStep(index, shouldScroll = true) {
+  if (!ECOSYSTEM_TOUR_STEPS.length) return;
+  ecosystemTourIndex = (index + ECOSYSTEM_TOUR_STEPS.length) % ECOSYSTEM_TOUR_STEPS.length;
+  const step = ECOSYSTEM_TOUR_STEPS[ecosystemTourIndex];
+  const target = document.querySelector(step.selector);
+  const data = getTourStepData(step);
+  if (data) updateMapDetail(data);
+  setActiveFlow(step.flow);
+  document.querySelectorAll(".is-tour-focus").forEach(el => el.classList.remove("is-tour-focus"));
+  if (target) {
+    target.classList.add("is-tour-focus");
+    if (shouldScroll) scrollTourTargetIntoView(target);
+  }
+  const counter = document.getElementById("tour-step-count");
+  if (counter) counter.textContent = `Step ${ecosystemTourIndex + 1} of ${ECOSYSTEM_TOUR_STEPS.length}`;
+}
+
+function setupEcosystemTour() {
+  const next = document.getElementById("tour-next");
+  const prev = document.getElementById("tour-prev");
+  const reset = document.getElementById("tour-reset");
+  const play = document.getElementById("tour-play");
+  if (!next || !prev || !reset || !play) return;
+
+  const stopPlayback = () => {
+    if (ecosystemPlayTimer) window.clearInterval(ecosystemPlayTimer);
+    ecosystemPlayTimer = null;
+    play.textContent = "Play All";
+  };
+
+  next.addEventListener("click", () => {
+    stopPlayback();
+    activateEcosystemTourStep(ecosystemTourIndex + 1);
+  });
+  prev.addEventListener("click", () => {
+    stopPlayback();
+    activateEcosystemTourStep(ecosystemTourIndex - 1);
+  });
+  reset.addEventListener("click", () => {
+    stopPlayback();
+    activateEcosystemTourStep(0);
+  });
+  play.addEventListener("click", () => {
+    if (ecosystemPlayTimer) {
+      stopPlayback();
+      return;
+    }
+    play.textContent = "Pause";
+    activateEcosystemTourStep(0);
+    ecosystemPlayTimer = window.setInterval(() => {
+      if (ecosystemTourIndex >= ECOSYSTEM_TOUR_STEPS.length - 1) {
+        stopPlayback();
+        return;
+      }
+      activateEcosystemTourStep(ecosystemTourIndex + 1);
+    }, 2200);
+  });
+
+  activateEcosystemTourStep(0, false);
+}
 function setupMapInteractions() {
   const nodes = document.querySelectorAll(".js-map-node");
   if (!nodes.length) return;
@@ -716,6 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderMobileStory();
   setupDiagramInteractions();
   setupMapInteractions();
+  setupEcosystemTour();
   setupMobileAccordions();
   renderCompareTable();
   setupQuiz();

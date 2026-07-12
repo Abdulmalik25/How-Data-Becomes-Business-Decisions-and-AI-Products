@@ -124,7 +124,27 @@
       <span><i class="legend-line solid"></i> System/output card</span>
     </div>
 
-    <div class="ecosystem-desktop flow-map flow-map-v2" id="ecosystem-desktop">
+    <div class="ecosystem-tour-controls" aria-label="Interactive tour controls">
+      <button class="tour-control-btn" type="button" id="tour-reset">Reset</button>
+      <button class="tour-control-btn" type="button" id="tour-prev">Previous</button>
+      <span class="tour-step-count" id="tour-step-count">Step 1 of 14</span>
+      <button class="tour-control-btn primary" type="button" id="tour-next">Next</button>
+      <button class="tour-control-btn dark" type="button" id="tour-play">Play All</button>
+    </div>
+
+    <aside class="map-detail-panel" id="map-detail-panel" aria-live="polite">
+      <p class="map-detail-kicker">Current step</p>
+      <h3 id="map-detail-title">Data Sources</h3>
+      <p id="map-detail-question">Where does raw data originate?</p>
+      <dl>
+        <div><dt>What happens</dt><dd id="map-detail-work">Operational systems create raw data before it is prepared for business use.</dd></div>
+        <div><dt>Output</dt><dd id="map-detail-output">Raw source data ready for ingestion, validation, and storage.</dd></div>
+        <div><dt>Beginner view</dt><dd id="map-detail-beginner">This is the starting point: data is created by real systems and user activity.</dd></div>
+      </dl>
+    </aside>
+
+    <div class="ecosystem-scroll-viewport" id="ecosystem-scroll-viewport" aria-label="Scrollable desktop ecosystem canvas">
+      <div class="ecosystem-desktop flow-map flow-map-v2" id="ecosystem-desktop">
       <button class="architect-ribbon js-detail js-map-node" type="button" data-detail="architect" data-map-key="architect" data-flow-group="architect" aria-label="Open Data Architect details">
         <span class="ribbon-icon">DA</span>
         <span class="ribbon-copy"><strong>Data Architect Zone</strong><small>Cross-cutting role guiding the full data ecosystem</small></span>
@@ -140,33 +160,33 @@
       </button>
 
       <div class="map-stage" aria-label="Desktop data ecosystem flow map">
-        <svg class="flow-svg" viewBox="0 0 1440 720" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="flow-svg" viewBox="0 0 1800 720" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <filter id="flowGlow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
           </defs>
-          <path id="source-apps" class="flow-path source-path" data-flow="sources" d="M168 90 C212 122 218 210 252 310" />
-          <path id="source-databases" class="flow-path source-path" data-flow="sources" d="M168 150 C212 180 224 240 252 310" />
-          <path id="source-apis" class="flow-path source-path" data-flow="sources" d="M168 210 C210 232 228 276 252 310" />
-          <path id="source-crm" class="flow-path source-path" data-flow="sources" d="M168 270 C205 284 224 300 252 310" />
-          <path id="source-payments" class="flow-path source-path" data-flow="sources" d="M168 330 C205 326 224 318 252 310" />
-          <path id="source-events" class="flow-path source-path" data-flow="sources" d="M168 390 C210 372 226 336 252 310" />
-          <path id="source-files" class="flow-path source-path" data-flow="sources" d="M168 450 C212 420 224 356 252 310" />
-          <path id="source-sheets" class="flow-path source-path" data-flow="sources" d="M168 510 C214 466 222 374 252 310" />
-          <path id="source-docs" class="flow-path source-path" data-flow="sources" d="M168 570 C214 512 220 394 252 310" />
-          <path id="sources-to-ingestion" class="flow-path engineer-path" data-flow="ingestion" d="M252 310 C280 310 292 310 318 310" />
-          <path id="ingestion-to-platform" class="flow-path engineer-path" data-flow="ingestion" d="M482 310 C520 310 538 310 572 310" />
-          <path id="bronze-silver" class="flow-path platform-path" data-flow="lakehouse" d="M670 320 C700 320 718 320 748 320" />
-          <path id="silver-gold" class="flow-path platform-path" data-flow="lakehouse" d="M840 320 C870 320 888 320 918 320" />
-          <path id="gold-semantic" class="flow-path platform-path" data-flow="lakehouse" d="M1010 320 C1040 320 1058 320 1088 320" />
-          <path id="platform-analytics" class="flow-path analytics-path" data-flow="analyticsBranch" d="M1135 320 C1170 210 1195 160 1230 154" />
-          <path id="platform-ml" class="flow-path ml-path" data-flow="mlBranch" d="M1135 320 C1174 323 1192 324 1230 324" />
-          <path id="platform-ai" class="flow-path ai-path" data-flow="aiBranch" d="M1135 320 C1170 432 1192 492 1230 500" />
-          <path id="analytics-outcome" class="flow-path analytics-path" data-flow="stakeholders" d="M1254 154 C1272 154 1284 154 1302 154" />
-          <path id="ml-outcome" class="flow-path ml-path" data-flow="stakeholders" d="M1254 324 C1272 324 1285 318 1302 310" />
-          <path id="ai-outcome" class="flow-path ai-path" data-flow="stakeholders" d="M1254 500 C1272 494 1285 486 1302 474" />
+          <path id="source-apps" class="flow-path source-path" data-flow="sources" d="M178 96 C230 130 246 240 318 332" />
+          <path id="source-databases" class="flow-path source-path" data-flow="sources" d="M178 156 C232 188 252 270 318 332" />
+          <path id="source-apis" class="flow-path source-path" data-flow="sources" d="M178 216 C232 236 260 298 318 332" />
+          <path id="source-crm" class="flow-path source-path" data-flow="sources" d="M178 276 C230 286 264 320 318 332" />
+          <path id="source-payments" class="flow-path source-path" data-flow="sources" d="M178 336 C230 334 264 334 318 332" />
+          <path id="source-events" class="flow-path source-path" data-flow="sources" d="M178 396 C232 384 260 350 318 332" />
+          <path id="source-files" class="flow-path source-path" data-flow="sources" d="M178 456 C234 426 256 370 318 332" />
+          <path id="source-sheets" class="flow-path source-path" data-flow="sources" d="M178 516 C236 474 254 388 318 332" />
+          <path id="source-docs" class="flow-path source-path" data-flow="sources" d="M178 576 C236 520 252 406 318 332" />
+          <path id="sources-to-ingestion" class="flow-path engineer-path" data-flow="ingestion" d="M318 332 C358 332 380 332 418 332" />
+          <path id="ingestion-to-platform" class="flow-path engineer-path" data-flow="ingestion" d="M610 332 C654 332 682 332 726 332" />
+          <path id="bronze-silver" class="flow-path platform-path" data-flow="lakehouse" d="M838 344 C874 344 896 344 932 344" />
+          <path id="silver-gold" class="flow-path platform-path" data-flow="lakehouse" d="M1030 344 C1066 344 1088 344 1124 344" />
+          <path id="gold-semantic" class="flow-path platform-path" data-flow="lakehouse" d="M1222 344 C1258 344 1280 344 1316 344" />
+          <path id="platform-analytics" class="flow-path analytics-path" data-flow="analyticsBranch" d="M1418 344 C1462 206 1518 186 1570 174" />
+          <path id="platform-ml" class="flow-path ml-path" data-flow="mlBranch" d="M1418 344 C1464 352 1516 352 1570 354" />
+          <path id="platform-ai" class="flow-path ai-path" data-flow="aiBranch" d="M1418 344 C1462 484 1518 538 1570 544" />
+          <path id="analytics-outcome" class="flow-path analytics-path" data-flow="stakeholders" d="M1734 174 C1750 174 1760 174 1780 174" />
+          <path id="ml-outcome" class="flow-path ml-path" data-flow="stakeholders" d="M1734 354 C1752 354 1762 332 1780 320" />
+          <path id="ai-outcome" class="flow-path ai-path" data-flow="stakeholders" d="M1734 544 C1752 538 1764 506 1780 486" />
 
           <circle class="flow-dot source-dot" r="4"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#source-apis" /></animateMotion></circle>
           <circle class="flow-dot source-dot" r="4"><animateMotion dur="5.5s" begin="0.8s" repeatCount="indefinite"><mpath href="#source-docs" /></animateMotion></circle>
@@ -211,13 +231,13 @@
         <section class="platform-panel js-section-detail js-map-node" tabindex="0" data-section="lakehouse" data-map-key="lakehouse" data-flow-group="lakehouse">
           <h3>Data Platform (Lakehouse / Warehouse)</h3>
           <div class="platform-layer-row">
-            <button class="platform-layer bronze" type="button"><span>BR</span><strong>Bronze Layer</strong><small>Raw Data</small><em>Unprocessed data from sources</em></button>
+            <button class="platform-layer bronze js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="bronze" data-flow-group="lakehouse"><span>BR</span><strong>Bronze Layer</strong><small>Raw Data</small><em>Unprocessed data from sources</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer silver" type="button"><span>SI</span><strong>Silver Layer</strong><small>Cleaned Data</small><em>Cleaned and validated data</em></button>
+            <button class="platform-layer silver js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="silver" data-flow-group="lakehouse"><span>SI</span><strong>Silver Layer</strong><small>Cleaned Data</small><em>Cleaned and validated data</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer gold" type="button"><span>GO</span><strong>Gold Layer</strong><small>Business Data</small><em>Business-ready data for analysis</em></button>
+            <button class="platform-layer gold js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="gold" data-flow-group="lakehouse"><span>GO</span><strong>Gold Layer</strong><small>Business Data</small><em>Business-ready data for analysis</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer semantic" type="button"><span>SE</span><strong>Semantic Layer</strong><small>Metrics & KPIs</small><em>Trusted metrics and logic</em></button>
+            <button class="platform-layer semantic js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="semantic" data-flow-group="lakehouse"><span>SE</span><strong>Semantic Layer</strong><small>Metrics & KPIs</small><em>Trusted metrics and logic</em></button>
           </div>
           <div class="platform-capabilities">
             <span>Data Quality</span><span>Lineage</span><span>Catalog</span><span>Access Control</span><span>Monitoring</span>
@@ -273,6 +293,7 @@
             </div>
           </section>
         </div>
+      </div>
       </div>
     </div>
 
