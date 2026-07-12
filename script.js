@@ -539,6 +539,7 @@ function setupMapInteractions() {
     node.addEventListener("focus", () => activate(node));
     node.addEventListener("click", event => {
       event.preventDefault();
+      event.stopPropagation();
       activate(node);
     });
     node.addEventListener("keydown", event => {
