@@ -220,15 +220,14 @@ const SECTION_DATA = {
 const ROLE_ORDER = ["architect", "engineer", "analyst", "bi", "scientist", "ml", "ai"];
 
 const MOBILE_STEPS = [
-  { title: "1. Where data comes from", color: COLORS.engineer, text: "Apps, databases, APIs, CRM, payments, events, files, spreadsheets, and documents create raw source data." },
-  { title: "2. How it is collected", color: COLORS.engineer, text: "Ingestion collects data through batch jobs, streams, CDC, scheduled pulls, and validation checks." },
-  { title: "3. How pipelines move it", color: COLORS.engineer, role: "engineer", text: "Data Engineers build reliable pipelines and automation so data keeps flowing without manual copy-paste work." },
-  { title: "4. How Bronze/Silver/Gold organize it", color: COLORS.engineer, text: "Bronze keeps raw data, Silver cleans and validates it, and Gold prepares data for business use." },
-  { title: "5. How the Semantic Layer helps", color: COLORS.architect, text: "The semantic layer defines trusted metrics, KPIs, and reusable business logic so teams stop arguing about definitions." },
-  { title: "6. How Analytics/BI uses it", color: COLORS.analytics, roles: ["analyst", "bi"], text: "Data Analysts and BI Developers turn trusted data into dashboards, reports, KPIs, insights, and recommendations." },
-  { title: "7. How ML uses it", color: COLORS.mlGroup, roles: ["scientist", "ml"], text: "Data Scientists model patterns from Silver, Gold, feature, event, and external data; ML Engineers deploy and monitor those models." },
-  { title: "8. How AI products use it", color: COLORS.ai, role: "ai", text: "AI Engineers combine Gold data, documents, APIs, vector databases, and LLMs to build RAG apps, copilots, agents, and workflows." },
-  { title: "9. How business teams benefit", color: COLORS.outcomes, role: "stakeholders", text: "Executives, managers, product teams, sales, marketing, operations, and customers receive decisions, automation, and better experiences." },
+  { key: "sources", title: "1. Where data begins", color: COLORS.engineer, text: "Apps, databases, APIs, CRM, payments, events, files, spreadsheets, and documents create raw source data." },
+  { key: "ingestion", title: "2. How data is collected", color: COLORS.engineer, role: "engineer", text: "Ingestion collects data through batch jobs, streaming pipelines, CDC, scheduling, and validation checks." },
+  { key: "engineer", title: "3. How data is engineered", color: COLORS.engineer, role: "engineer", text: "Data Engineers automate movement, quality checks, orchestration, and storage so data becomes reliable." },
+  { key: "lakehouse", title: "4. How data becomes Bronze/Silver/Gold/Semantic", color: COLORS.engineer, text: "Bronze keeps raw data, Silver cleans and validates it, Gold prepares business-ready data, and the semantic layer defines trusted KPIs and reusable logic." },
+  { key: "analyticsBranch", title: "5. How Analytics/BI uses it", color: COLORS.analytics, roles: ["analyst", "bi"], text: "Data Analysts and BI Developers turn trusted Gold data and semantic metrics into dashboards, reports, KPIs, insights, and recommendations." },
+  { key: "mlBranch", title: "6. How Machine Learning uses it", color: COLORS.mlGroup, roles: ["scientist", "ml"], text: "Data Scientists model patterns from Silver, Gold, feature, event, and external data; ML Engineers deploy APIs, monitoring, CI/CD, and retraining workflows." },
+  { key: "aiBranch", title: "7. How AI Products use it", color: COLORS.ai, role: "ai", text: "AI Engineers combine Gold data, documents, APIs, vector databases, LLMs, tool calling, agents, evaluations, guardrails, and deployment patterns." },
+  { key: "stakeholders", title: "8. How business teams benefit", color: COLORS.outcomes, role: "stakeholders", text: "Executives, managers, product teams, sales, marketing, operations, and customers use the outputs for decisions, growth, savings, automation, and better experiences." },
 ];
 
 const QUIZ_QUESTIONS = [
@@ -470,25 +469,97 @@ function hideTooltip() {
 function renderMobileStory() {
   const wrap = document.getElementById("ecosystem-mobile");
   if (!wrap) return;
-  wrap.innerHTML = MOBILE_STEPS.map(step => {
+  wrap.innerHTML = MOBILE_STEPS.map((step, index) => {
     const roles = step.roles || (step.role ? [step.role] : []);
     const buttons = roles.map(key => {
       const data = getDetailData(key);
       return `<button class="mobile-role-link js-detail" type="button" data-detail="${key}" style="--step-color:${data.color}">${data.title}</button>`;
     }).join("");
     return `
-      <article class="mobile-step-card" style="--step-color:${step.color}">
+      <article class="mobile-step-card${index === 0 ? " is-open" : ""}" style="--step-color:${step.color}" data-mobile-step="${step.key}">
         <span class="mobile-step-line"></span>
-        <h3>${step.title}</h3>
-        <p>${step.text}</p>
-        ${buttons ? `<div class="mobile-role-row">${buttons}</div>` : ""}
+        <button class="mobile-step-toggle" type="button" aria-expanded="${index === 0 ? "true" : "false"}">
+          <h3>${step.title}</h3>
+        </button>
+        <div class="mobile-step-body">
+          <p>${step.text}</p>
+          ${buttons ? `<div class="mobile-role-row">${buttons}</div>` : ""}
+        </div>
       </article>
     `;
   }).join("");
 }
 
+function getMapNodeData(node) {
+  if (!node) return null;
+  const roleKey = node.dataset.detail;
+  const sectionKey = node.dataset.section;
+  const key = roleKey || sectionKey;
+  const data = roleKey ? getDetailData(roleKey) : getSectionData(sectionKey);
+  if (!data) return null;
+  return { key, data, flowGroup: node.dataset.flowGroup || key };
+}
+
+function updateMapDetail(data) {
+  const panel = document.getElementById("map-detail-panel");
+  if (!panel || !data) return;
+  panel.style.setProperty("--panel-color", data.color);
+  document.getElementById("map-detail-title").textContent = data.title;
+  document.getElementById("map-detail-question").textContent = data.question;
+  document.getElementById("map-detail-work").textContent = data.work;
+  document.getElementById("map-detail-output").textContent = data.output;
+  document.getElementById("map-detail-beginner").textContent = data.beginner;
+}
+
+function setActiveFlow(group) {
+  document.querySelectorAll(".js-map-node").forEach(node => {
+    node.classList.toggle("is-active", node.dataset.flowGroup === group || node.dataset.mapKey === group);
+  });
+  document.querySelectorAll(".flow-path").forEach(path => {
+    path.classList.toggle("is-active", path.dataset.flow === group || (group === "engineer" && ["ingestion", "lakehouse"].includes(path.dataset.flow)));
+  });
+}
+
+function setupMapInteractions() {
+  const nodes = document.querySelectorAll(".js-map-node");
+  if (!nodes.length) return;
+  const activate = node => {
+    const payload = getMapNodeData(node);
+    if (!payload) return;
+    updateMapDetail(payload.data);
+    setActiveFlow(payload.flowGroup);
+  };
+  nodes.forEach(node => {
+    node.addEventListener("mouseenter", () => {
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) activate(node);
+    });
+    node.addEventListener("focus", () => activate(node));
+    node.addEventListener("click", event => {
+      event.preventDefault();
+      activate(node);
+    });
+    node.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activate(node);
+      }
+    });
+  });
+  activate(nodes[0]);
+}
+
+function setupMobileAccordions() {
+  document.querySelectorAll(".mobile-step-card").forEach(card => {
+    const toggle = card.querySelector(".mobile-step-toggle");
+    if (!toggle) return;
+    toggle.addEventListener("click", () => {
+      const isOpen = card.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  });
+}
 function setupDiagramInteractions() {
-  document.querySelectorAll(".js-detail").forEach(el => {
+  document.querySelectorAll(".js-detail:not(.js-map-node)").forEach(el => {
     const key = el.dataset.detail;
     el.addEventListener("click", () => openDetail(key));
     el.addEventListener("keydown", event => {
@@ -505,7 +576,7 @@ function setupDiagramInteractions() {
     el.addEventListener("blur", hideTooltip);
   });
 
-  document.querySelectorAll(".js-section-detail").forEach(el => {
+  document.querySelectorAll(".js-section-detail:not(.js-map-node)").forEach(el => {
     const key = el.dataset.section;
     el.addEventListener("click", event => {
       if (event.target.closest("button")) return;
@@ -644,6 +715,8 @@ function setupShare() {
 document.addEventListener("DOMContentLoaded", () => {
   renderMobileStory();
   setupDiagramInteractions();
+  setupMapInteractions();
+  setupMobileAccordions();
   renderCompareTable();
   setupQuiz();
   setupShare();
