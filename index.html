@@ -132,7 +132,7 @@
       </button>
 
       <div class="desktop-flow-grid">
-        <section class="solid-card sources-card" aria-labelledby="sources-title">
+        <section class="solid-card sources-card js-section-detail" tabindex="0" data-section="sources" aria-labelledby="sources-title">
           <span class="zone-kicker">Data Sources</span>
           <h3 id="sources-title">Where data begins</h3>
           <div class="pill-list">
@@ -140,7 +140,7 @@
           </div>
         </section>
 
-        <div class="flow-arrow horizontal" aria-hidden="true"><span></span></div>
+        <div class="flow-rail rail-sources-engineering" aria-hidden="true"><span class="flow-dot-runner"></span></div>
 
         <section class="zone-card engineer-zone" aria-labelledby="engineer-zone-title">
           <div class="zone-heading">
@@ -148,12 +148,12 @@
             <span>Pipelines | ETL/ELT | Orchestration | Data Quality | Cloud Storage | Lakehouse/Warehouse | Automation</span>
           </div>
           <div class="engineer-grid">
-            <div class="solid-card mini-card">
+            <div class="solid-card mini-card js-section-detail" tabindex="0" data-section="ingestion">
               <span class="zone-kicker">Ingestion & Orchestration</span>
               <h3 id="engineer-zone-title">Collect and move data</h3>
               <div class="pill-list compact"><span>Batch</span><span>Streaming</span><span>CDC</span><span>Scheduling</span><span>Validation</span></div>
             </div>
-            <div class="lakehouse-card solid-card">
+            <div class="lakehouse-card solid-card js-section-detail" tabindex="0" data-section="lakehouse">
               <span class="zone-kicker">Data Lakehouse / Warehouse</span>
               <div class="layer-row">
                 <button class="layer-card" type="button" data-story="Bronze stores raw data exactly as it arrives."><strong>Bronze</strong><span>Raw data</span></button>
@@ -166,51 +166,49 @@
           <p class="zone-output">Output: reliable pipelines, clean datasets, and business-ready data layers.</p>
         </section>
 
-        <div class="flow-arrow horizontal" aria-hidden="true"><span></span></div>
+        <div class="flow-rail rail-engineering-branches" aria-hidden="true"><span class="flow-dot-runner"></span></div>
 
         <section class="branches-zone" aria-labelledby="branches-title">
           <span class="zone-kicker">Output Branches</span>
           <h3 id="branches-title">Trusted data becomes products, insights, and systems</h3>
           <div class="branch-grid">
-            <article class="branch-card analytics-branch">
+            <article class="branch-card analytics-branch js-section-detail" tabindex="0" data-section="analyticsBranch">
               <span class="zone-kicker">Analytics/BI</span>
               <div class="role-row">
                 <button class="role-chip js-detail" type="button" data-detail="analyst">Data Analyst</button>
                 <button class="role-chip js-detail" type="button" data-detail="bi">BI Developer</button>
               </div>
-              <p>Uses Gold data, semantic layer, KPIs, and trusted metrics.</p>
               <div class="pill-list compact"><span>Dashboards</span><span>Reports</span><span>KPIs</span><span>Business Insights</span><span>Recommendations</span></div>
             </article>
 
-            <article class="branch-card ml-branch">
+            <article class="branch-card ml-branch js-section-detail" tabindex="0" data-section="mlBranch">
               <span class="zone-kicker">Machine Learning</span>
               <div class="role-row">
                 <button class="role-chip js-detail" type="button" data-detail="scientist">Data Scientist</button>
                 <button class="role-chip js-detail" type="button" data-detail="ml">ML Engineer</button>
               </div>
-              <p>Uses Silver/Gold data, feature data, event logs, experiments, and external data.</p>
               <div class="pill-list compact"><span>Predictive Models</span><span>Experiments</span><span>Forecasting</span><span>Segmentation</span><span>ML APIs</span><span>Monitoring</span></div>
             </article>
 
-            <article class="branch-card ai-branch">
+            <article class="branch-card ai-branch js-section-detail" tabindex="0" data-section="aiBranch">
               <span class="zone-kicker">AI Products</span>
               <div class="role-row">
                 <button class="role-chip js-detail" type="button" data-detail="ai">AI Engineer</button>
               </div>
-              <p>Uses Gold data, documents, APIs, knowledge sources, vector databases, and LLMs.</p>
+              <div class="branch-inputs">Inputs: Gold Data / Documents / APIs / Vector DB / LLMs</div>
               <div class="pill-list compact"><span>Chatbots</span><span>RAG Apps</span><span>Copilots</span><span>Agents</span><span>AI Workflows</span><span>AI Products</span></div>
             </article>
           </div>
         </section>
+
+        <div class="flow-rail rail-branches-outcomes" aria-hidden="true"><span class="flow-dot-runner"></span></div>
+
+        <button class="outcomes-card js-detail" type="button" data-detail="stakeholders" aria-label="Open business stakeholders details">
+          <span class="zone-kicker">Business Outcomes</span>
+          <strong>Decisions | Revenue Growth | Cost Saving | Automation | Better Customer Experience</strong>
+          <span>Final consumers: Executives, Managers, Product Teams, Sales, Marketing, Operations, and Customers.</span>
+        </button>
       </div>
-
-      <div class="flow-arrow downward" aria-hidden="true"><span></span></div>
-
-      <button class="outcomes-card js-detail" type="button" data-detail="stakeholders" aria-label="Open business stakeholders details">
-        <span class="zone-kicker">Business Outcomes</span>
-        <strong>Decisions | Revenue Growth | Cost Saving | Automation | Better Customer Experience</strong>
-        <span>Final consumers: Executives, Managers, Product Teams, Sales, Marketing, Operations, and Customers.</span>
-      </button>
     </div>
 
     <div class="ecosystem-mobile" id="ecosystem-mobile" aria-label="Mobile data ecosystem story"></div>

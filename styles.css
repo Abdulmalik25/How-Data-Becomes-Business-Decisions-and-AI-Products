@@ -925,9 +925,9 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 
 .desktop-flow-grid {
   display: grid;
-  grid-template-columns: minmax(170px, 0.78fr) 42px minmax(460px, 1.8fr) 42px minmax(380px, 1.45fr);
+  grid-template-columns: minmax(150px, 0.64fr) 54px minmax(420px, 1.6fr) 54px minmax(260px, 0.9fr) 54px minmax(220px, 0.72fr);
   gap: 14px;
-  align-items: center;
+  align-items: stretch;
   margin-top: 16px;
 }
 
@@ -969,58 +969,56 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
   min-height: 24px;
 }
 
-.flow-arrow {
+.flow-rail {
+  --rail-color: #2563eb;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2563eb;
+  min-width: 42px;
+  color: var(--rail-color);
 }
 
-.flow-arrow span {
-  position: relative;
-  display: block;
-  background: currentColor;
-  opacity: 0.65;
-}
-
-.flow-arrow.horizontal span {
-  width: 36px;
-  height: 2px;
-}
-
-.flow-arrow.horizontal span::after {
+.flow-rail::before {
   content: "";
   position: absolute;
-  right: -1px;
+  left: 4px;
+  right: 4px;
   top: 50%;
-  width: 9px;
-  height: 9px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, currentColor 18%, currentColor 82%, transparent);
+  opacity: 0.72;
+  box-shadow: 0 0 18px color-mix(in srgb, currentColor 34%, transparent);
+}
+
+.flow-rail::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
   border-top: 2px solid currentColor;
   border-right: 2px solid currentColor;
   transform: translateY(-50%) rotate(45deg);
 }
 
-.flow-arrow.downward {
-  height: 36px;
-  color: #1e293b;
-}
-
-.flow-arrow.downward span {
-  width: 2px;
-  height: 30px;
-}
-
-.flow-arrow.downward span::after {
-  content: "";
+.flow-dot-runner {
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 9px;
-  height: 9px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: translateX(-50%) rotate(45deg);
+  left: 5px;
+  top: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 16%, transparent), 0 0 18px currentColor;
+  opacity: 0.95;
 }
+
+.rail-sources-engineering { --rail-color: #2563eb; }
+.rail-engineering-branches { --rail-color: #4f46e5; }
+.rail-branches-outcomes { --rail-color: #0f172a; }
 
 .engineer-zone {
   color: #2563eb;
@@ -1102,27 +1100,29 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 
 .branch-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 10px;
   margin-top: 12px;
 }
 
 .branch-card {
   display: flex;
-  min-height: 300px;
+  min-height: 0;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 14px;
+  border-left: 4px solid currentColor;
 }
 
 .analytics-branch { color: #0f9d78; border-color: rgba(15,157,120,0.35); }
 .ml-branch { color: #ea580c; border-color: rgba(234,88,12,0.35); }
 .ai-branch { color: #7c3aed; border-color: rgba(124,58,237,0.35); }
 
-.branch-card p {
+.branch-inputs {
   color: var(--ink-soft);
-  font-size: 12.5px;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 700;
 }
 
 .role-row {
@@ -1147,20 +1147,22 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 .mobile-role-link:hover,
 .layer-card:hover,
 .architect-zone:hover,
-.outcomes-card:hover {
+.outcomes-card:hover,
+.js-section-detail:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 34px rgba(15,23,42,0.11);
 }
 
 .outcomes-card {
-  width: min(980px, 100%);
+  width: 100%;
   display: grid;
+  align-content: center;
   gap: 8px;
-  margin: 0 auto;
-  padding: 20px;
+  padding: 18px;
   border: 1.5px solid #1e293b;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
   color: #1e293b;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -1200,23 +1202,18 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .ecosystem-desktop::after {
-    content: "";
-    position: absolute;
-    inset: 86px 32px 84px;
-    pointer-events: none;
-    background:
-      radial-gradient(circle, #2563eb 0 3px, transparent 4px),
-      radial-gradient(circle, #0f9d78 0 2px, transparent 3px),
-      radial-gradient(circle, #7c3aed 0 3px, transparent 4px);
-    background-size: 260px 80px, 340px 110px, 420px 120px;
-    animation: ecosystemParticles 9s linear infinite;
-    opacity: 0.42;
+  .flow-dot-runner {
+    animation: railPulse 2.6s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
 
-  @keyframes ecosystemParticles {
-    from { background-position: 0 0, 0 30px, 0 60px; }
-    to { background-position: 520px 0, 680px 30px, 840px 60px; }
+  .rail-engineering-branches .flow-dot-runner { animation-delay: 0.5s; }
+  .rail-branches-outcomes .flow-dot-runner { animation-delay: 1s; }
+
+  @keyframes railPulse {
+    0% { transform: translateX(0) scale(0.82); opacity: 0; }
+    14% { opacity: 1; }
+    86% { opacity: 1; }
+    100% { transform: translateX(36px) scale(1); opacity: 0; }
   }
 }
 
@@ -1225,25 +1222,50 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
     grid-template-columns: 1fr;
   }
 
-  .flow-arrow.horizontal {
-    height: 28px;
+  .flow-rail {
+    min-height: 34px;
   }
 
-  .flow-arrow.horizontal span {
+  .flow-rail::before {
+    left: 50%;
+    right: auto;
+    top: 3px;
+    bottom: 3px;
     width: 2px;
-    height: 26px;
+    height: auto;
+    background: linear-gradient(180deg, transparent, currentColor 18%, currentColor 82%, transparent);
+    transform: translateX(-50%);
   }
 
-  .flow-arrow.horizontal span::after {
+  .flow-rail::after {
     right: auto;
     top: auto;
     left: 50%;
-    bottom: 0;
-    border-top: none;
-    border-left: none;
+    bottom: 2px;
+    border-top: 0;
+    border-left: 0;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
     transform: translateX(-50%) rotate(45deg);
+  }
+
+  .flow-dot-runner {
+    left: calc(50% - 4px);
+    top: 4px;
+  }
+
+}
+
+@media (max-width: 1180px) and (prefers-reduced-motion: no-preference) {
+  .flow-dot-runner {
+    animation-name: railPulseVertical;
+  }
+
+  @keyframes railPulseVertical {
+    0% { transform: translateY(0) scale(0.82); opacity: 0; }
+    14% { opacity: 1; }
+    86% { opacity: 1; }
+    100% { transform: translateY(24px) scale(1); opacity: 0; }
   }
 }
 

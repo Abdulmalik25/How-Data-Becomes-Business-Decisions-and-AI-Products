@@ -172,6 +172,51 @@ const STAKEHOLDER_DATA = {
   sits: "At the end of the value chain, receiving dashboards, reports, predictions, recommendations, and AI products.",
 };
 
+const SECTION_DATA = {
+  sources: {
+    title: "Data Sources", color: COLORS.engineer, icon: "engineer", question: "Where does raw data originate?",
+    work: "Applications, databases, APIs, CRM systems, payment systems, events, files, spreadsheets, and documents create operational data before it is prepared for business use.",
+    output: "Raw source data ready for ingestion, validation, and storage.", beginner: "This is the starting point: data is created by real systems and user activity.", sits: "Before engineering pipelines, often owned by operational systems and application teams.",
+    skills: ["Source Systems", "APIs", "Events", "Files", "Data Contracts", "Access Patterns"], tools: ["Databases", "SaaS APIs", "CRM", "Payment Systems", "Event Streams", "Object Storage"],
+    workMix: [{ label: "Systems", pct: 35, color: COLORS.engineer }, { label: "APIs", pct: 25, color: "#3b82f6" }, { label: "Events", pct: 20, color: "#60a5fa" }, { label: "Files", pct: 20, color: "#93c5fd" }],
+    learningPath: ["Identify source systems", "Understand structured vs unstructured data", "Learn APIs and events", "Document ownership and refresh patterns"],
+  },
+  ingestion: {
+    title: "Ingestion & Orchestration", color: COLORS.engineer, icon: "engineer", question: "How does data move reliably from sources into the platform?",
+    work: "Data Engineers build scheduled batch jobs, streaming pipelines, CDC feeds, validation checks, and orchestration workflows that keep data flowing consistently.",
+    output: "Automated pipelines with monitoring, validation, and dependable refresh schedules.", beginner: "This is the transport system that moves data without manual copy-paste work.", sits: "Between source systems and the lakehouse or warehouse storage layers.",
+    skills: ["ETL/ELT", "Orchestration", "Validation", "Batch", "Streaming", "CDC"], tools: ["Airflow", "Kafka", "Spark", "dbt", "Cloud Storage", "Warehouse Loads"], workMix: ROLE_DATA.engineer.workMix,
+    learningPath: ["SQL and Python", "Batch ingestion", "Scheduling and retries", "Streaming or CDC", "Data quality checks"],
+  },
+  lakehouse: {
+    title: "Lakehouse / Warehouse Layers", color: COLORS.engineer, icon: "engineer", question: "How does raw data become clean, trusted, and reusable?",
+    work: "Bronze keeps raw data, Silver cleans and validates it, Gold organizes business-ready datasets, and the semantic layer standardizes metrics, KPIs, and reusable logic.",
+    output: "Trusted data layers for analytics, BI, ML, and AI products.", beginner: "This is where messy raw data becomes something people and systems can trust.", sits: "At the center of the ecosystem, after ingestion and before downstream use cases.",
+    skills: ["Data Modeling", "SQL", "Data Quality", "Transformations", "Semantic Metrics", "Governance"], tools: ["Snowflake", "Databricks", "BigQuery", "dbt", "Spark", "Catalogs"], workMix: ROLE_DATA.engineer.workMix,
+    learningPath: ["Bronze/Silver/Gold patterns", "Dimensional modeling", "Data quality rules", "Metric definitions", "Documentation and lineage"],
+  },
+  analyticsBranch: {
+    title: "Analytics/BI Branch", color: COLORS.analytics, icon: "bi", question: "How does trusted data become insight and reporting?",
+    work: "Data Analysts and BI Developers use Gold data and semantic metrics to create reports, dashboards, KPI systems, insights, and business recommendations.",
+    output: "Dashboards, reports, KPIs, insights, recommendations, and decision support.", beginner: "This branch explains what happened and what the business should do next.", sits: "Downstream of Gold datasets and semantic metrics, before business decisions.",
+    skills: ["SQL", "Dashboard UX", "Business Analysis", "KPI Design", "Storytelling", "Data Modeling"], tools: ["Power BI", "Tableau", "Looker", "Excel", "SQL", "dbt Metrics"], workMix: ROLE_DATA.bi.workMix,
+    learningPath: ["SQL", "KPI definitions", "Power BI or Tableau", "Business analysis", "Communication"],
+  },
+  mlBranch: {
+    title: "Machine Learning Branch", color: COLORS.mlGroup, icon: "scientist", question: "How does data become prediction and automation?",
+    work: "Data Scientists build models using Silver, Gold, feature, event, experimental, and external data; ML Engineers deploy, serve, monitor, and retrain models in production.",
+    output: "Predictive models, experiments, forecasting, segmentation, ML APIs, monitoring, and retraining workflows.", beginner: "This branch moves from analysis into prediction and production model systems.", sits: "Downstream of trusted data, feature data, event logs, experiments, and model deployment systems.",
+    skills: ["Statistics", "Python", "Feature Engineering", "Modeling", "APIs", "MLOps"], tools: ["scikit-learn", "Jupyter", "MLflow", "FastAPI", "Docker", "Monitoring"], workMix: ROLE_DATA.scientist.workMix,
+    learningPath: ["Statistics", "Python ML", "Feature engineering", "Model evaluation", "APIs and MLOps"],
+  },
+  aiBranch: {
+    title: "AI Products Branch", color: COLORS.ai, icon: "ai", question: "How does company knowledge become AI software?",
+    work: "AI Engineers combine Gold data, documents, APIs, vector databases, LLMs, evaluations, guardrails, tool calling, and deployment patterns to build usable AI products.",
+    output: "Chatbots, RAG apps, copilots, agents, AI workflows, and AI products.", beginner: "This branch turns trusted data and knowledge sources into interactive AI experiences.", sits: "Downstream of data products, document stores, APIs, LLMs, vector databases, and application systems.",
+    skills: ["Python", "LLM APIs", "RAG", "Vector Search", "Tool Calling", "Evaluation"], tools: ["OpenAI/LLM APIs", "LangChain/LlamaIndex", "Vector DBs", "FastAPI", "Eval Frameworks", "Observability"], workMix: ROLE_DATA.ai.workMix,
+    learningPath: ["LLM fundamentals", "RAG and retrieval", "Tool calling and agents", "Evals and guardrails", "Deployment and monitoring"],
+  },
+};
 const ROLE_ORDER = ["architect", "engineer", "analyst", "bi", "scientist", "ml", "ai"];
 
 const MOBILE_STEPS = [
@@ -229,6 +274,9 @@ function getDetailData(key) {
   return key === "stakeholders" ? STAKEHOLDER_DATA : ROLE_DATA[key];
 }
 
+function getSectionData(key) {
+  return SECTION_DATA[key];
+}
 function setModalLabels(isStakeholder) {
   const labels = document.querySelectorAll("#modal-body .section-label");
   const roleLabels = [
@@ -254,6 +302,24 @@ function setModalLabels(isStakeholder) {
     "How to explain it",
   ];
   const next = isStakeholder ? stakeholderLabels : roleLabels;
+  labels.forEach((label, index) => {
+    if (next[index]) label.textContent = next[index];
+  });
+}
+
+function setSectionModalLabels() {
+  const labels = document.querySelectorAll("#modal-body .section-label");
+  const next = [
+    "Question this area answers",
+    "Work happening here",
+    "Output created",
+    "Beginner explanation",
+    "Where it sits",
+    "Tools / skills involved",
+    "Common tools",
+    "Activity mix",
+    "What to learn next",
+  ];
   labels.forEach((label, index) => {
     if (next[index]) label.textContent = next[index];
   });
@@ -322,6 +388,39 @@ function openDetail(key) {
   document.getElementById("modal-close").focus();
 }
 
+function openSectionDetail(key) {
+  const data = getSectionData(key);
+  if (!data) return;
+  lastFocusedEl = document.activeElement;
+  setSectionModalLabels();
+
+  document.getElementById("modal-icon").innerHTML = iconSVGString(data.icon, 30, data.color);
+  document.getElementById("modal-title").textContent = data.title;
+  document.getElementById("modal-question").textContent = data.question;
+  document.getElementById("modal-what").textContent = data.question;
+  document.getElementById("modal-why").textContent = data.work;
+
+  const exBox = document.getElementById("modal-example");
+  exBox.textContent = data.output;
+  exBox.style.borderLeftColor = data.color;
+  exBox.style.background = `${data.color}12`;
+
+  const beginnerEl = document.getElementById("modal-salary");
+  beginnerEl.textContent = data.beginner;
+  beginnerEl.style.color = data.color;
+  document.getElementById("modal-hires").textContent = data.sits;
+  document.getElementById("modal-skills").innerHTML = data.skills.map(s => `<span class="tag tag-skill" style="background:${data.color}15;color:${data.color}">${s}</span>`).join("");
+  document.getElementById("modal-tools").innerHTML = data.tools.map(t => `<span class="tag tag-tool">${t}</span>`).join("");
+  document.getElementById("modal-daybar").innerHTML = buildDayBarHTML(data.workMix);
+  document.getElementById("modal-learning").innerHTML = data.learningPath.map((item, index) => `<div class="learn-step"><div class="learn-num" style="background:${data.color}20;color:${data.color}">${index + 1}</div><span class="learn-text">${item}</span></div>`).join("");
+
+  const box = document.getElementById("modal-box");
+  box.style.borderColor = data.color;
+  box.style.boxShadow = `0 20px 60px ${data.color}25`;
+  document.getElementById("modal-overlay").classList.remove("hidden");
+  document.getElementById("modal-close").focus();
+}
+
 function closeModal() {
   document.getElementById("modal-overlay").classList.add("hidden");
   if (lastFocusedEl && lastFocusedEl.focus) lastFocusedEl.focus();
@@ -340,6 +439,21 @@ function showTooltip(key, target) {
   tooltip.innerHTML = `
     <strong style="color:${data.color}">${iconSVGString(data.icon, 16, data.color)} ${data.title}</strong>
     <span>${isStakeholder ? data.output : data.question}</span>
+  `;
+  const rect = target.getBoundingClientRect();
+  const shell = document.querySelector(".ecosystem-shell").getBoundingClientRect();
+  tooltip.style.left = `${Math.min(Math.max(rect.left - shell.left, 12), shell.width - 300)}px`;
+  tooltip.style.top = `${Math.max(rect.top - shell.top - 86, 12)}px`;
+  tooltip.classList.add("visible");
+}
+
+function showSectionTooltip(key, target) {
+  const data = getSectionData(key);
+  const tooltip = ensureTooltip();
+  if (!data || !tooltip || !target) return;
+  tooltip.innerHTML = `
+    <strong style="color:${data.color}">${iconSVGString(data.icon, 16, data.color)} ${data.title}</strong>
+    <span>${data.question}</span>
   `;
   const rect = target.getBoundingClientRect();
   const shell = document.querySelector(".ecosystem-shell").getBoundingClientRect();
@@ -388,6 +502,26 @@ function setupDiagramInteractions() {
     });
     el.addEventListener("mouseleave", hideTooltip);
     el.addEventListener("focus", () => showTooltip(key, el));
+    el.addEventListener("blur", hideTooltip);
+  });
+
+  document.querySelectorAll(".js-section-detail").forEach(el => {
+    const key = el.dataset.section;
+    el.addEventListener("click", event => {
+      if (event.target.closest("button")) return;
+      openSectionDetail(key);
+    });
+    el.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openSectionDetail(key);
+      }
+    });
+    el.addEventListener("mouseenter", () => {
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) showSectionTooltip(key, el);
+    });
+    el.addEventListener("mouseleave", hideTooltip);
+    el.addEventListener("focus", () => showSectionTooltip(key, el));
     el.addEventListener("blur", hideTooltip);
   });
 
