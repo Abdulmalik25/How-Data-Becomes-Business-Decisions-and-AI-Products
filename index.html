@@ -124,28 +124,35 @@
       <span><i class="legend-line solid"></i> System/output card</span>
     </div>
 
-    <div class="ecosystem-tour-controls" aria-label="Interactive tour controls">
-      <button class="tour-control-btn" type="button" id="tour-reset">Reset</button>
-      <button class="tour-control-btn" type="button" id="tour-prev">Previous</button>
-      <span class="tour-step-count" id="tour-step-count">Step 1 of 14</span>
-      <button class="tour-control-btn primary" type="button" id="tour-next">Next</button>
-      <button class="tour-control-btn dark" type="button" id="tour-play">Play All</button>
+    <!-- EXPLANATION BAR — persistent, always-visible; this is the panel the JS
+         interaction logic (updateMapDetail) already targets. It was missing
+         from the markup before, so hover/click never showed an explanation. -->
+    <div id="map-detail-panel" aria-live="polite">
+      <div id="map-detail-icon" aria-hidden="true"></div>
+      <div class="map-detail-copy">
+        <h3 id="map-detail-title">Data Architect</h3>
+        <p id="map-detail-question"></p>
+      </div>
+      <dl class="map-detail-grid">
+        <div><dt>Work</dt><dd id="map-detail-work"></dd></div>
+        <div><dt>Output</dt><dd id="map-detail-output"></dd></div>
+        <div><dt>Beginner explanation</dt><dd id="map-detail-beginner"></dd></div>
+      </dl>
     </div>
 
-    <aside class="map-detail-panel" id="map-detail-panel" aria-live="polite">
-      <p class="map-detail-kicker">Current step</p>
-      <h3 id="map-detail-title">Data Sources</h3>
-      <p id="map-detail-question">Where does raw data originate?</p>
-      <dl>
-        <div><dt>What happens</dt><dd id="map-detail-work">Operational systems create raw data before it is prepared for business use.</dd></div>
-        <div><dt>Output</dt><dd id="map-detail-output">Raw source data ready for ingestion, validation, and storage.</dd></div>
-        <div><dt>Beginner view</dt><dd id="map-detail-beginner">This is the starting point: data is created by real systems and user activity.</dd></div>
-      </dl>
-    </aside>
+    <!-- MOVIE-STYLE TOUR CONTROLS -->
+    <div id="controls" class="ecosystem-controls">
+      <button id="btn-reset" class="ctrl-btn secondary" type="button" aria-label="Reset tour to start">↺ Reset</button>
+      <button id="btn-prev" class="ctrl-btn secondary" type="button" aria-label="Previous step">← Prev</button>
+      <div id="step-counter" aria-live="polite">Intro</div>
+      <button id="btn-next" class="ctrl-btn primary" type="button" aria-label="Next step">Next →</button>
+      <button id="btn-auto" class="ctrl-btn dark" type="button" aria-label="Play all steps automatically">▶ Play All</button>
+      <div class="kbd-hint" aria-hidden="true"><kbd>→</kbd>/<kbd>←</kbd><kbd>Space</kbd><kbd>R</kbd></div>
+    </div>
 
-    <div class="ecosystem-scroll-viewport" id="ecosystem-scroll-viewport" aria-label="Scrollable desktop ecosystem canvas">
-      <div class="ecosystem-desktop flow-map flow-map-v2" id="ecosystem-desktop">
-      <button class="architect-ribbon js-detail js-map-node" type="button" data-detail="architect" data-map-key="architect" data-flow-group="architect" aria-label="Open Data Architect details">
+    <div class="ecosystem-scroll" id="ecosystem-scroll" tabindex="0" aria-label="Scroll horizontally to see the full ecosystem canvas">
+    <div class="ecosystem-desktop flow-map flow-map-v2" id="ecosystem-desktop">
+      <button class="architect-ribbon js-detail js-map-node" type="button" data-detail="architect" data-map-key="architect" data-flow-group="architect" data-node-id="architect" aria-label="Open Data Architect details">
         <span class="ribbon-icon">DA</span>
         <span class="ribbon-copy"><strong>Data Architect Zone</strong><small>Cross-cutting role guiding the full data ecosystem</small></span>
         <span class="ribbon-divider"></span>
@@ -160,63 +167,42 @@
       </button>
 
       <div class="map-stage" aria-label="Desktop data ecosystem flow map">
-        <svg class="flow-svg" viewBox="0 0 1800 720" preserveAspectRatio="none" aria-hidden="true">
+        <!-- Connector paths + particles are computed at runtime from the actual
+             rendered position of each card (see computeConnectors() in script.js).
+             This guarantees lines are always aligned to real content, at any
+             width, instead of relying on hand-tuned coordinates. -->
+        <svg class="flow-svg" id="flow-svg" aria-hidden="true">
           <defs>
             <filter id="flowGlow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
           </defs>
-          <path id="source-apps" class="flow-path source-path" data-flow="sources" d="M178 96 C230 130 246 240 318 332" />
-          <path id="source-databases" class="flow-path source-path" data-flow="sources" d="M178 156 C232 188 252 270 318 332" />
-          <path id="source-apis" class="flow-path source-path" data-flow="sources" d="M178 216 C232 236 260 298 318 332" />
-          <path id="source-crm" class="flow-path source-path" data-flow="sources" d="M178 276 C230 286 264 320 318 332" />
-          <path id="source-payments" class="flow-path source-path" data-flow="sources" d="M178 336 C230 334 264 334 318 332" />
-          <path id="source-events" class="flow-path source-path" data-flow="sources" d="M178 396 C232 384 260 350 318 332" />
-          <path id="source-files" class="flow-path source-path" data-flow="sources" d="M178 456 C234 426 256 370 318 332" />
-          <path id="source-sheets" class="flow-path source-path" data-flow="sources" d="M178 516 C236 474 254 388 318 332" />
-          <path id="source-docs" class="flow-path source-path" data-flow="sources" d="M178 576 C236 520 252 406 318 332" />
-          <path id="sources-to-ingestion" class="flow-path engineer-path" data-flow="ingestion" d="M318 332 C358 332 380 332 418 332" />
-          <path id="ingestion-to-platform" class="flow-path engineer-path" data-flow="ingestion" d="M610 332 C654 332 682 332 726 332" />
-          <path id="bronze-silver" class="flow-path platform-path" data-flow="lakehouse" d="M838 344 C874 344 896 344 932 344" />
-          <path id="silver-gold" class="flow-path platform-path" data-flow="lakehouse" d="M1030 344 C1066 344 1088 344 1124 344" />
-          <path id="gold-semantic" class="flow-path platform-path" data-flow="lakehouse" d="M1222 344 C1258 344 1280 344 1316 344" />
-          <path id="platform-analytics" class="flow-path analytics-path" data-flow="analyticsBranch" d="M1418 344 C1462 206 1518 186 1570 174" />
-          <path id="platform-ml" class="flow-path ml-path" data-flow="mlBranch" d="M1418 344 C1464 352 1516 352 1570 354" />
-          <path id="platform-ai" class="flow-path ai-path" data-flow="aiBranch" d="M1418 344 C1462 484 1518 538 1570 544" />
-          <path id="analytics-outcome" class="flow-path analytics-path" data-flow="stakeholders" d="M1734 174 C1750 174 1760 174 1780 174" />
-          <path id="ml-outcome" class="flow-path ml-path" data-flow="stakeholders" d="M1734 354 C1752 354 1762 332 1780 320" />
-          <path id="ai-outcome" class="flow-path ai-path" data-flow="stakeholders" d="M1734 544 C1752 538 1764 506 1780 486" />
-
-          <circle class="flow-dot source-dot" r="4"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#source-apis" /></animateMotion></circle>
-          <circle class="flow-dot source-dot" r="4"><animateMotion dur="5.5s" begin="0.8s" repeatCount="indefinite"><mpath href="#source-docs" /></animateMotion></circle>
-          <circle class="flow-dot engineer-dot" r="5"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#ingestion-to-platform" /></animateMotion></circle>
-          <circle class="flow-dot platform-dot" r="4"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#bronze-silver" /></animateMotion></circle>
-          <circle class="flow-dot platform-dot" r="4"><animateMotion dur="3.2s" begin="0.8s" repeatCount="indefinite"><mpath href="#gold-semantic" /></animateMotion></circle>
-          <circle class="flow-dot analytics-dot" r="4"><animateMotion dur="4.2s" begin="0.2s" repeatCount="indefinite"><mpath href="#platform-analytics" /></animateMotion></circle>
-          <circle class="flow-dot ml-dot" r="4"><animateMotion dur="4.2s" begin="0.5s" repeatCount="indefinite"><mpath href="#platform-ml" /></animateMotion></circle>
-          <circle class="flow-dot ai-dot" r="4"><animateMotion dur="4.2s" begin="0.9s" repeatCount="indefinite"><mpath href="#platform-ai" /></animateMotion></circle>
+          <g id="connector-layer"></g>
+          <g id="particle-layer"></g>
         </svg>
 
-        <div class="stage-heading heading-sources"><b>1</b><span>Data Sources</span><small>Where data begins</small></div>
-        <div class="stage-heading heading-ingestion"><b>2</b><span>Ingestion & Orchestration</span><small>Collect and move data</small></div>
-        <div class="stage-heading heading-platform"><b>3</b><span>Data Platform (Lakehouse / Warehouse)</span><small>Store, clean and organize data</small></div>
-        <div class="stage-heading heading-branches"><b>4</b><span>Output Branches (Users & Builders)</span><small>Different teams, different outputs</small></div>
-        <div class="stage-heading heading-outcomes"><b>5</b><span>Business Outcomes</span><small>Impact that matters</small></div>
-
-        <div class="source-list">
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>AP</span><strong>Apps</strong><small>Web / Mobile</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>DB</span><strong>Databases</strong><small>SQL / NoSQL</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>API</span><strong>APIs</strong><small>REST / GraphQL</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>CRM</span><strong>CRM</strong><small>Customers</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>PAY</span><strong>Payments</strong><small>Transactions</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>EV</span><strong>Events</strong><small>Logs / Clicks</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>CSV</span><strong>Files</strong><small>CSV / Excel / JSON</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>SH</span><strong>Spreadsheets</strong><small>Google Sheets</small></button>
-          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources"><span>DOC</span><strong>Documents</strong><small>PDF / DOC / TXT</small></button>
+        <div class="stage-heading-row">
+          <div class="stage-heading heading-sources"><b>1</b><span>Data Sources</span><small>Where data begins</small></div>
+          <div class="stage-heading heading-ingestion"><b>2</b><span>Ingestion &amp; Orchestration</span><small>Collect and move data</small></div>
+          <div class="stage-heading heading-platform"><b>3</b><span>Data Platform (Lakehouse / Warehouse)</span><small>Store, clean and organize data</small></div>
+          <div class="stage-heading heading-branches"><b>4</b><span>Output Branches (Users &amp; Builders)</span><small>Different teams, different outputs</small></div>
+          <div class="stage-heading heading-outcomes"><b>5</b><span>Business Outcomes</span><small>Impact that matters</small></div>
         </div>
 
-        <section class="ingestion-panel js-section-detail js-map-node" tabindex="0" data-section="ingestion" data-map-key="ingestion" data-flow-group="ingestion">
+        <div class="source-list">
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-1"><span>AP</span><strong>Apps</strong><small>Web / Mobile</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-2"><span>DB</span><strong>Databases</strong><small>SQL / NoSQL</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-3"><span>API</span><strong>APIs</strong><small>REST / GraphQL</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-4"><span>CRM</span><strong>CRM</strong><small>Customers</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-5"><span>PAY</span><strong>Payments</strong><small>Transactions</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-6"><span>EV</span><strong>Events</strong><small>Logs / Clicks</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-7"><span>CSV</span><strong>Files</strong><small>CSV / Excel / JSON</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-8"><span>SH</span><strong>Spreadsheets</strong><small>Google Sheets</small></button>
+          <button class="source-item js-section-detail js-map-node" type="button" data-section="sources" data-map-key="sources" data-flow-group="sources" data-node-id="source-9"><span>DOC</span><strong>Documents</strong><small>PDF / DOC / TXT</small></button>
+        </div>
+
+        <section class="ingestion-panel js-section-detail js-map-node" tabindex="0" data-section="ingestion" data-map-key="ingestion" data-flow-group="ingestion" data-node-id="ingestion">
           <h3>Ingestion & Orchestration</h3>
           <ul>
             <li><span>BT</span><strong>Batch</strong><small>Scheduled loads</small></li>
@@ -228,16 +214,16 @@
           <button class="owner-badge js-detail" type="button" data-detail="engineer">Data Engineer</button>
         </section>
 
-        <section class="platform-panel js-section-detail js-map-node" tabindex="0" data-section="lakehouse" data-map-key="lakehouse" data-flow-group="lakehouse">
+        <section class="platform-panel js-section-detail js-map-node" tabindex="0" data-section="lakehouse" data-map-key="lakehouse" data-flow-group="lakehouse" data-node-id="platform">
           <h3>Data Platform (Lakehouse / Warehouse)</h3>
           <div class="platform-layer-row">
-            <button class="platform-layer bronze js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="bronze" data-flow-group="lakehouse"><span>BR</span><strong>Bronze Layer</strong><small>Raw Data</small><em>Unprocessed data from sources</em></button>
+            <button class="platform-layer bronze" type="button" data-node-id="bronze"><span>BR</span><strong>Bronze Layer</strong><small>Raw Data</small><em>Unprocessed data from sources</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer silver js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="silver" data-flow-group="lakehouse"><span>SI</span><strong>Silver Layer</strong><small>Cleaned Data</small><em>Cleaned and validated data</em></button>
+            <button class="platform-layer silver" type="button" data-node-id="silver"><span>SI</span><strong>Silver Layer</strong><small>Cleaned Data</small><em>Cleaned and validated data</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer gold js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="gold" data-flow-group="lakehouse"><span>GO</span><strong>Gold Layer</strong><small>Business Data</small><em>Business-ready data for analysis</em></button>
+            <button class="platform-layer gold" type="button" data-node-id="gold"><span>GO</span><strong>Gold Layer</strong><small>Business Data</small><em>Business-ready data for analysis</em></button>
             <i aria-hidden="true">-></i>
-            <button class="platform-layer semantic js-section-detail js-map-node" type="button" data-section="lakehouse" data-map-key="semantic" data-flow-group="lakehouse"><span>SE</span><strong>Semantic Layer</strong><small>Metrics & KPIs</small><em>Trusted metrics and logic</em></button>
+            <button class="platform-layer semantic" type="button" data-node-id="semantic"><span>SE</span><strong>Semantic Layer</strong><small>Metrics & KPIs</small><em>Trusted metrics and logic</em></button>
           </div>
           <div class="platform-capabilities">
             <span>Data Quality</span><span>Lineage</span><span>Catalog</span><span>Access Control</span><span>Monitoring</span>
@@ -246,29 +232,30 @@
         </section>
 
         <div class="branch-stack">
-          <section class="branch-panel analytics-panel js-section-detail js-map-node" tabindex="0" data-section="analyticsBranch" data-map-key="analyticsBranch" data-flow-group="analyticsBranch">
+          <section class="branch-panel analytics-panel js-section-detail js-map-node" tabindex="0" data-section="analyticsBranch" data-map-key="analyticsBranch" data-flow-group="analyticsBranch" data-node-id="analyticsBranch">
             <h3>Analytics / BI</h3>
             <div class="role-pills"><button class="js-detail" type="button" data-detail="analyst">Data Analyst</button><button class="js-detail" type="button" data-detail="bi">BI Developer</button></div>
             <div class="output-grid"><span>Dashboards</span><span>Reports</span><span>KPIs</span><span>Business Insights</span><span>Recommendations</span></div>
           </section>
-          <section class="branch-panel ml-panel js-section-detail js-map-node" tabindex="0" data-section="mlBranch" data-map-key="mlBranch" data-flow-group="mlBranch">
+          <section class="branch-panel ml-panel js-section-detail js-map-node" tabindex="0" data-section="mlBranch" data-map-key="mlBranch" data-flow-group="mlBranch" data-node-id="mlBranch">
             <h3>Machine Learning</h3>
             <div class="role-pills"><button class="js-detail" type="button" data-detail="scientist">Data Scientist</button><button class="js-detail" type="button" data-detail="ml">ML Engineer</button></div>
             <div class="output-grid"><span>Predictive Models</span><span>Experiments</span><span>Forecasting</span><span>Segmentation</span><span>ML APIs</span><span>Monitoring</span></div>
           </section>
-          <section class="branch-panel ai-panel js-section-detail js-map-node" tabindex="0" data-section="aiBranch" data-map-key="aiBranch" data-flow-group="aiBranch">
+          <section class="branch-panel ai-panel js-section-detail js-map-node" tabindex="0" data-section="aiBranch" data-map-key="aiBranch" data-flow-group="aiBranch" data-node-id="aiBranch">
             <h3>AI Products</h3>
             <div class="role-pills"><button class="js-detail" type="button" data-detail="ai">AI Engineer</button></div>
             <div class="output-grid"><span>Chatbots</span><span>RAG Apps</span><span>Copilots</span><span>Agents</span><span>AI Workflows</span><span>AI Products</span></div>
           </section>
         </div>
 
-        <section class="outcome-panel js-detail js-map-node" tabindex="0" data-detail="stakeholders" data-map-key="stakeholders" data-flow-group="stakeholders">
+        <section class="outcome-panel js-detail js-map-node" tabindex="0" data-detail="stakeholders" data-map-key="stakeholders" data-flow-group="stakeholders" data-node-id="stakeholders">
           <h3>Business Outcomes</h3>
           <ul class="outcome-list"><li>Better Decisions</li><li>Revenue Growth</li><li>Cost Saving</li><li>Automation</li><li>Customer Experience</li></ul>
           <h4>Final Consumers</h4>
           <ul class="consumer-list"><li>Executives</li><li>Managers</li><li>Product Teams</li><li>Sales & Marketing</li><li>Operations</li><li>Customers</li></ul>
         </section>
+      </div><!-- /.map-stage -->
 
         <div class="desktop-bottom-info">
           <section class="flow-legend-card">
@@ -294,8 +281,7 @@
           </section>
         </div>
       </div>
-      </div>
-    </div>
+    </div><!-- /.ecosystem-scroll -->
 
     <div class="ecosystem-mobile" id="ecosystem-mobile" aria-label="Mobile data ecosystem story"></div>
   </div>

@@ -511,150 +511,18 @@ function updateMapDetail(data) {
   document.getElementById("map-detail-beginner").textContent = data.beginner;
 }
 
+let currentFlowGroup = null;
+
 function setActiveFlow(group) {
+  currentFlowGroup = group;
   document.querySelectorAll(".js-map-node").forEach(node => {
-    node.classList.toggle("is-active", node.dataset.flowGroup === group || node.dataset.mapKey === group);
+    node.classList.toggle("is-active", !!group && (node.dataset.flowGroup === group || node.dataset.mapKey === group));
   });
   document.querySelectorAll(".flow-path").forEach(path => {
-    path.classList.toggle("is-active", path.dataset.flow === group || (group === "engineer" && ["ingestion", "lakehouse"].includes(path.dataset.flow)));
+    path.classList.toggle("is-active", !!group && (path.dataset.flow === group || (group === "engineer" && ["ingestion", "lakehouse"].includes(path.dataset.flow))));
   });
 }
 
-
-const ECOSYSTEM_TOUR_STEPS = [
-  { key: "sources", label: "Data Sources", type: "section", selector: ".source-list", flow: "sources" },
-  { key: "ingestion", label: "Ingestion & Orchestration", type: "section", selector: ".ingestion-panel", flow: "ingestion" },
-  { key: "bronze", label: "Bronze Layer", type: "section", selector: "[data-map-key='bronze']", flow: "lakehouse" },
-  { key: "silver", label: "Silver Layer", type: "section", selector: "[data-map-key='silver']", flow: "lakehouse" },
-  { key: "gold", label: "Gold Layer", type: "section", selector: "[data-map-key='gold']", flow: "lakehouse" },
-  { key: "semantic", label: "Semantic Layer", type: "section", selector: "[data-map-key='semantic']", flow: "lakehouse" },
-  { key: "analyticsBranch", label: "Analytics / BI Branch", type: "section", selector: "[data-map-key='analyticsBranch']", flow: "analyticsBranch" },
-  { key: "mlBranch", label: "Machine Learning Branch", type: "section", selector: "[data-map-key='mlBranch']", flow: "mlBranch" },
-  { key: "aiBranch", label: "AI Products Branch", type: "section", selector: "[data-map-key='aiBranch']", flow: "aiBranch" },
-  { key: "stakeholders", label: "Business Outcomes", type: "role", selector: "[data-map-key='stakeholders']", flow: "stakeholders" },
-  { key: "architect", label: "Data Architect Zone", type: "role", selector: "[data-map-key='architect']", flow: "architect" },
-  { key: "engineer", label: "Data Engineer Responsibility", type: "role", selector: ".platform-owner", flow: "engineer" },
-  { key: "roleSummary", label: "Role Summary", type: "summary", selector: ".desktop-bottom-info", flow: "stakeholders" },
-  { key: "recap", label: "Final Ecosystem Recap", type: "section", selector: ".flow-map-v2", flow: "stakeholders" },
-];
-
-let ecosystemTourIndex = 0;
-let ecosystemPlayTimer = null;
-
-function getTourStepData(step) {
-  if (!step) return null;
-  if (step.type === "role") return getDetailData(step.key);
-  if (step.key === "roleSummary") {
-    return {
-      title: "Roles at a Glance",
-      color: COLORS.outcomes,
-      question: "Who does what across the connected ecosystem?",
-      work: "Each role owns a different responsibility in the same value chain: architecture, pipelines, insights, dashboards, models, deployment, AI products, and business consumption.",
-      output: "A clearer view of where every role contributes without confusing practitioners with final consumers.",
-      beginner: "Use this as the quick map before choosing which career path to study deeper.",
-    };
-  }
-  if (step.key === "recap") {
-    return {
-      title: "Final Ecosystem Recap",
-      color: COLORS.engineer,
-      question: "How does data become business value end to end?",
-      work: "Sources feed ingestion, ingestion feeds trusted platform layers, and those layers power analytics, machine learning, AI products, and business outcomes.",
-      output: "A simplified but realistic mental model of the modern data ecosystem.",
-      beginner: "Real companies vary, but the core idea stays the same: data becomes useful through connected responsibilities.",
-    };
-  }
-  if (["bronze", "silver", "gold", "semantic"].includes(step.key)) {
-    const layerNames = {
-      bronze: "Bronze Layer",
-      silver: "Silver Layer",
-      gold: "Gold Layer",
-      semantic: "Semantic Layer",
-    };
-    const layerMeanings = {
-      bronze: "Bronze keeps raw, unprocessed data from source systems.",
-      silver: "Silver cleans, validates, and standardizes raw data.",
-      gold: "Gold organizes business-ready data for reporting, ML, and decision support.",
-      semantic: "The semantic layer defines trusted metrics, KPIs, and reusable business logic.",
-    };
-    const base = getSectionData("lakehouse");
-    return { ...base, title: layerNames[step.key], work: layerMeanings[step.key] };
-  }
-  return getSectionData(step.key);
-}
-
-function scrollTourTargetIntoView(target) {
-  const viewport = document.getElementById("ecosystem-scroll-viewport");
-  const canvas = document.getElementById("ecosystem-desktop");
-  if (!viewport || !canvas || !target) return;
-  const targetRect = target.getBoundingClientRect();
-  const canvasRect = canvas.getBoundingClientRect();
-  const targetCenter = (targetRect.left - canvasRect.left) + (targetRect.width / 2);
-  const maxScroll = Math.max(0, canvas.scrollWidth - viewport.clientWidth);
-  const nextLeft = Math.max(0, Math.min(targetCenter - (viewport.clientWidth / 2), maxScroll));
-  viewport.scrollTo({ left: nextLeft, behavior: "smooth" });
-}
-
-function activateEcosystemTourStep(index, shouldScroll = true) {
-  if (!ECOSYSTEM_TOUR_STEPS.length) return;
-  ecosystemTourIndex = (index + ECOSYSTEM_TOUR_STEPS.length) % ECOSYSTEM_TOUR_STEPS.length;
-  const step = ECOSYSTEM_TOUR_STEPS[ecosystemTourIndex];
-  const target = document.querySelector(step.selector);
-  const data = getTourStepData(step);
-  if (data) updateMapDetail(data);
-  setActiveFlow(step.flow);
-  document.querySelectorAll(".is-tour-focus").forEach(el => el.classList.remove("is-tour-focus"));
-  if (target) {
-    target.classList.add("is-tour-focus");
-    if (shouldScroll) scrollTourTargetIntoView(target);
-  }
-  const counter = document.getElementById("tour-step-count");
-  if (counter) counter.textContent = `Step ${ecosystemTourIndex + 1} of ${ECOSYSTEM_TOUR_STEPS.length}`;
-}
-
-function setupEcosystemTour() {
-  const next = document.getElementById("tour-next");
-  const prev = document.getElementById("tour-prev");
-  const reset = document.getElementById("tour-reset");
-  const play = document.getElementById("tour-play");
-  if (!next || !prev || !reset || !play) return;
-
-  const stopPlayback = () => {
-    if (ecosystemPlayTimer) window.clearInterval(ecosystemPlayTimer);
-    ecosystemPlayTimer = null;
-    play.textContent = "Play All";
-  };
-
-  next.addEventListener("click", () => {
-    stopPlayback();
-    activateEcosystemTourStep(ecosystemTourIndex + 1);
-  });
-  prev.addEventListener("click", () => {
-    stopPlayback();
-    activateEcosystemTourStep(ecosystemTourIndex - 1);
-  });
-  reset.addEventListener("click", () => {
-    stopPlayback();
-    activateEcosystemTourStep(0);
-  });
-  play.addEventListener("click", () => {
-    if (ecosystemPlayTimer) {
-      stopPlayback();
-      return;
-    }
-    play.textContent = "Pause";
-    activateEcosystemTourStep(0);
-    ecosystemPlayTimer = window.setInterval(() => {
-      if (ecosystemTourIndex >= ECOSYSTEM_TOUR_STEPS.length - 1) {
-        stopPlayback();
-        return;
-      }
-      activateEcosystemTourStep(ecosystemTourIndex + 1);
-    }, 2200);
-  });
-
-  activateEcosystemTourStep(0, false);
-}
 function setupMapInteractions() {
   const nodes = document.querySelectorAll(".js-map-node");
   if (!nodes.length) return;
@@ -847,15 +715,303 @@ function setupShare() {
   });
 }
 
+// ═══════════════════════════════════════════════════════
+// DYNAMIC CONNECTORS
+// Paths are computed from the *actual* rendered position of each card,
+// not hardcoded coordinates — this is what guarantees they stay aligned
+// regardless of column widths, content length, or viewport.
+// ═══════════════════════════════════════════════════════
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function prefersReducedMotionNow() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function rectRelativeTo(stageRect, el) {
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return {
+    left: r.left - stageRect.left,
+    right: r.right - stageRect.left,
+    top: r.top - stageRect.top,
+    bottom: r.bottom - stageRect.top,
+    cx: r.left - stageRect.left + r.width / 2,
+    cy: r.top - stageRect.top + r.height / 2,
+  };
+}
+
+function addFlowPath(layer, id, fromRect, toRect, cls, flow) {
+  if (!fromRect || !toRect) return null;
+  const midX = (fromRect.right + toRect.left) / 2;
+  const d = `M ${fromRect.right} ${fromRect.cy} C ${midX} ${fromRect.cy}, ${midX} ${toRect.cy}, ${toRect.left} ${toRect.cy}`;
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute("id", id);
+  path.setAttribute("d", d);
+  path.setAttribute("class", `flow-path ${cls}`);
+  path.setAttribute("data-flow", flow);
+  layer.appendChild(path);
+  return path;
+}
+
+function spawnAmbientParticle(layer, pathId, dotClass, dur, delay) {
+  if (!document.getElementById(pathId)) return;
+  const circle = document.createElementNS(SVG_NS, "circle");
+  circle.setAttribute("r", "4");
+  circle.setAttribute("class", `flow-dot ${dotClass}`);
+  const anim = document.createElementNS(SVG_NS, "animateMotion");
+  anim.setAttribute("dur", `${dur}s`);
+  anim.setAttribute("repeatCount", "indefinite");
+  anim.setAttribute("begin", `${delay}s`);
+  const mpath = document.createElementNS(SVG_NS, "mpath");
+  mpath.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${pathId}`);
+  anim.appendChild(mpath);
+  circle.appendChild(anim);
+  layer.appendChild(circle);
+}
+
+function computeConnectors() {
+  const svg = document.getElementById("flow-svg");
+  const stage = document.querySelector(".map-stage");
+  const connLayer = document.getElementById("connector-layer");
+  const particleLayer = document.getElementById("particle-layer");
+  if (!svg || !stage || !connLayer || !particleLayer) return;
+
+  const stageRect = stage.getBoundingClientRect();
+  const w = Math.round(stage.offsetWidth);
+  const h = Math.round(stage.offsetHeight);
+  if (!w || !h) return;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("width", w);
+  svg.setAttribute("height", h);
+
+  connLayer.innerHTML = "";
+  particleLayer.innerHTML = "";
+
+  const find = sel => rectRelativeTo(stageRect, stage.querySelector(sel));
+  const ingestionRect = find('[data-node-id="ingestion"]');
+  const platformRect = find('[data-node-id="platform"]');
+  const analyticsBranchRect = find('[data-node-id="analyticsBranch"]');
+  const mlBranchRect = find('[data-node-id="mlBranch"]');
+  const aiBranchRect = find('[data-node-id="aiBranch"]');
+  const outcomesRect = find('[data-node-id="stakeholders"]');
+
+  for (let i = 1; i <= 9; i++) {
+    const r = find(`[data-node-id="source-${i}"]`);
+    addFlowPath(connLayer, `conn-source-${i}`, r, ingestionRect, "source-path", "sources");
+  }
+  addFlowPath(connLayer, "conn-ingestion-platform", ingestionRect, platformRect, "engineer-path", "ingestion");
+  addFlowPath(connLayer, "conn-platform-analytics", platformRect, analyticsBranchRect, "analytics-path", "analyticsBranch");
+  addFlowPath(connLayer, "conn-platform-ml", platformRect, mlBranchRect, "ml-path", "mlBranch");
+  addFlowPath(connLayer, "conn-platform-ai", platformRect, aiBranchRect, "ai-path", "aiBranch");
+  addFlowPath(connLayer, "conn-analytics-outcome", analyticsBranchRect, outcomesRect, "analytics-path", "stakeholders");
+  addFlowPath(connLayer, "conn-ml-outcome", mlBranchRect, outcomesRect, "ml-path", "stakeholders");
+  addFlowPath(connLayer, "conn-ai-outcome", aiBranchRect, outcomesRect, "ai-path", "stakeholders");
+
+  if (!prefersReducedMotionNow()) {
+    spawnAmbientParticle(particleLayer, "conn-source-3", "source-dot", 4.8, 0);
+    spawnAmbientParticle(particleLayer, "conn-source-8", "source-dot", 5.4, 0.8);
+    spawnAmbientParticle(particleLayer, "conn-ingestion-platform", "engineer-dot", 3.2, 0);
+    spawnAmbientParticle(particleLayer, "conn-platform-analytics", "analytics-dot", 4.2, 0.2);
+    spawnAmbientParticle(particleLayer, "conn-platform-ml", "ml-dot", 4.2, 0.5);
+    spawnAmbientParticle(particleLayer, "conn-platform-ai", "ai-dot", 4.2, 0.9);
+    spawnAmbientParticle(particleLayer, "conn-analytics-outcome", "analytics-dot", 3.6, 0.3);
+    spawnAmbientParticle(particleLayer, "conn-ml-outcome", "ml-dot", 3.6, 0.6);
+    spawnAmbientParticle(particleLayer, "conn-ai-outcome", "ai-dot", 3.6, 1.0);
+  }
+
+  // Re-apply whatever flow was highlighted before the rebuild (paths were wiped above)
+  if (currentFlowGroup) setActiveFlow(currentFlowGroup);
+}
+
+function setupConnectorLifecycle() {
+  computeConnectors();
+  window.requestAnimationFrame(() => computeConnectors());
+  window.addEventListener("load", computeConnectors);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(computeConnectors).catch(() => {});
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(computeConnectors, 150);
+  });
+
+  if (window.ResizeObserver) {
+    const stage = document.querySelector(".map-stage");
+    if (stage) {
+      const ro = new ResizeObserver(() => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(computeConnectors, 100);
+      });
+      ro.observe(stage);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// MOVIE-STYLE TOUR CONTROLLER
+// Reset / Prev / Next / Play All — highlights the active zone, emphasizes
+// its connector, auto-scrolls the wide canvas to bring it into view, and
+// updates the always-visible explanation bar.
+// ═══════════════════════════════════════════════════════
+const TOUR_STEPS = [
+  { label: "Data Sources", flowGroup: "sources", scrollTo: '[data-node-id="source-1"]', detail: { type: "section", key: "sources" } },
+  { label: "Ingestion & Orchestration", flowGroup: "ingestion", scrollTo: '[data-node-id="ingestion"]', detail: { type: "section", key: "ingestion" } },
+  { label: "Bronze Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="bronze"]', emphasizeNode: "bronze", detail: { type: "section", key: "lakehouse" } },
+  { label: "Silver Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="silver"]', emphasizeNode: "silver", detail: { type: "section", key: "lakehouse" } },
+  { label: "Gold Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="gold"]', emphasizeNode: "gold", detail: { type: "section", key: "lakehouse" } },
+  { label: "Semantic Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="semantic"]', emphasizeNode: "semantic", detail: { type: "section", key: "lakehouse" } },
+  { label: "Analytics / BI Branch", flowGroup: "analyticsBranch", scrollTo: '[data-node-id="analyticsBranch"]', detail: { type: "section", key: "analyticsBranch" } },
+  { label: "Machine Learning Branch", flowGroup: "mlBranch", scrollTo: '[data-node-id="mlBranch"]', detail: { type: "section", key: "mlBranch" } },
+  { label: "AI Products Branch", flowGroup: "aiBranch", scrollTo: '[data-node-id="aiBranch"]', detail: { type: "section", key: "aiBranch" } },
+  { label: "Business Outcomes", flowGroup: "stakeholders", scrollTo: '[data-node-id="stakeholders"]', detail: { type: "role", key: "stakeholders" } },
+  { label: "Data Architect Zone", flowGroup: "architect", scrollTo: ".architect-ribbon", detail: { type: "role", key: "architect" } },
+  { label: "Data Engineer Responsibility", flowGroup: "engineer", scrollTo: '[data-node-id="ingestion"]', detail: { type: "role", key: "engineer" } },
+  { label: "Role Summary", flowGroup: null, scrollTo: ".roles-glance-card", detail: null },
+  { label: "Final Recap", flowGroup: null, scrollTo: ".architect-ribbon", detail: null },
+];
+const TOUR_TOTAL = TOUR_STEPS.length;
+
+let tourStep = 0;
+let tourAutoTimer = null;
+let tourAutoPlaying = false;
+
+function scrollStageTo(selector) {
+  const scrollBox = document.getElementById("ecosystem-scroll");
+  const target = selector && document.querySelector(selector);
+  if (!scrollBox || !target) return;
+  const boxRect = scrollBox.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const currentCenter = targetRect.left + targetRect.width / 2 - boxRect.left;
+  const delta = currentCenter - boxRect.width / 2;
+  const maxScroll = scrollBox.scrollWidth - scrollBox.clientWidth;
+  const nextLeft = Math.max(0, Math.min(maxScroll, scrollBox.scrollLeft + delta));
+  scrollBox.scrollTo({ left: nextLeft, behavior: prefersReducedMotionNow() ? "auto" : "smooth" });
+}
+
+function emphasizeLayerNode(nodeId) {
+  document.querySelectorAll(".platform-layer.is-active").forEach(el => el.classList.remove("is-active"));
+  if (!nodeId) return;
+  const el = document.querySelector(`[data-node-id="${nodeId}"]`);
+  if (el) el.classList.add("is-active");
+}
+
+function spawnTourEmphasisDot(flowGroup) {
+  if (prefersReducedMotionNow() || !flowGroup) return;
+  const path = document.querySelector(`#connector-layer .flow-path[data-flow="${flowGroup}"]`);
+  const particleLayer = document.getElementById("particle-layer");
+  if (!path || !particleLayer) return;
+  const id = path.id;
+  const circle = document.createElementNS(SVG_NS, "circle");
+  circle.setAttribute("r", "6");
+  circle.setAttribute("class", "tour-emphasis-dot");
+  circle.setAttribute("fill", getComputedStyle(path).stroke || "#6366f1");
+  const anim = document.createElementNS(SVG_NS, "animateMotion");
+  anim.setAttribute("dur", "1.1s");
+  anim.setAttribute("repeatCount", "1");
+  const mpath = document.createElementNS(SVG_NS, "mpath");
+  mpath.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${id}`);
+  anim.appendChild(mpath);
+  circle.appendChild(anim);
+  particleLayer.appendChild(circle);
+  window.setTimeout(() => circle.remove(), 1300);
+}
+
+function renderTourStep() {
+  const counter = document.getElementById("step-counter");
+  const prevBtn = document.getElementById("btn-prev");
+  const nextBtn = document.getElementById("btn-next");
+  if (!counter || !prevBtn || !nextBtn) return;
+
+  prevBtn.disabled = tourStep === 0;
+  nextBtn.disabled = tourStep >= TOUR_TOTAL;
+  counter.textContent = tourStep === 0 ? "Intro" : `${tourStep} / ${TOUR_TOTAL}`;
+
+  if (tourStep === 0) {
+    setActiveFlow(null);
+    emphasizeLayerNode(null);
+    document.querySelectorAll(".architect-ribbon.is-active").forEach(el => el.classList.remove("is-active"));
+    return;
+  }
+
+  const step = TOUR_STEPS[tourStep - 1];
+  setActiveFlow(step.flowGroup);
+  emphasizeLayerNode(step.emphasizeNode || null);
+  document.querySelector(".architect-ribbon").classList.toggle("is-active", step.flowGroup === "architect");
+
+  if (step.detail) {
+    const data = step.detail.type === "role" ? getDetailData(step.detail.key) : getSectionData(step.detail.key);
+    if (data) updateMapDetail(data);
+  }
+  scrollStageTo(step.scrollTo);
+  spawnTourEmphasisDot(step.flowGroup);
+}
+
+function tourNext() { if (tourStep < TOUR_TOTAL) { tourStep++; renderTourStep(); } }
+function tourPrev() { if (tourStep > 0) { tourStep--; renderTourStep(); } }
+function tourReset() {
+  tourStep = 0;
+  tourAutoPlaying = false;
+  clearInterval(tourAutoTimer);
+  tourAutoTimer = null;
+  const autoBtn = document.getElementById("btn-auto");
+  if (autoBtn) { autoBtn.textContent = "▶ Play All"; autoBtn.classList.remove("danger"); autoBtn.classList.add("dark"); }
+  renderTourStep();
+  const scrollBox = document.getElementById("ecosystem-scroll");
+  if (scrollBox) scrollBox.scrollTo({ left: 0, behavior: prefersReducedMotionNow() ? "auto" : "smooth" });
+}
+function tourToggleAuto() {
+  const autoBtn = document.getElementById("btn-auto");
+  tourAutoPlaying = !tourAutoPlaying;
+  if (tourAutoPlaying) {
+    if (autoBtn) { autoBtn.textContent = "⏸ Pause"; autoBtn.classList.remove("dark"); autoBtn.classList.add("danger"); }
+    tourAutoTimer = setInterval(() => {
+      if (tourStep >= TOUR_TOTAL) { tourAutoPlaying = false; clearInterval(tourAutoTimer); if (autoBtn) { autoBtn.textContent = "▶ Play All"; autoBtn.classList.remove("danger"); autoBtn.classList.add("dark"); } return; }
+      tourStep++;
+      renderTourStep();
+    }, 2600);
+  } else {
+    clearInterval(tourAutoTimer);
+    tourAutoTimer = null;
+    if (autoBtn) { autoBtn.textContent = "▶ Play All"; autoBtn.classList.remove("danger"); autoBtn.classList.add("dark"); }
+  }
+}
+
+function setupTourControls() {
+  const resetBtn = document.getElementById("btn-reset");
+  const prevBtn = document.getElementById("btn-prev");
+  const nextBtn = document.getElementById("btn-next");
+  const autoBtn = document.getElementById("btn-auto");
+  if (!resetBtn || !prevBtn || !nextBtn || !autoBtn) return;
+
+  resetBtn.addEventListener("click", tourReset);
+  prevBtn.addEventListener("click", tourPrev);
+  nextBtn.addEventListener("click", tourNext);
+  autoBtn.addEventListener("click", tourToggleAuto);
+
+  window.addEventListener("keydown", event => {
+    const overlayOpen = !document.getElementById("modal-overlay").classList.contains("hidden");
+    if (overlayOpen) return;
+    const tag = (document.activeElement && document.activeElement.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (event.key === "ArrowRight") tourNext();
+    else if (event.key === "ArrowLeft") tourPrev();
+    else if (event.key === " ") { event.preventDefault(); tourToggleAuto(); }
+    else if (event.key === "r" || event.key === "R") tourReset();
+  });
+
+  renderTourStep();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderMobileStory();
   setupDiagramInteractions();
   setupMapInteractions();
-  setupEcosystemTour();
   setupMobileAccordions();
   renderCompareTable();
   setupQuiz();
   setupShare();
+  setupConnectorLifecycle();
+  setupTourControls();
 
   document.getElementById("modal-close").addEventListener("click", closeModal);
   document.getElementById("modal-overlay").addEventListener("click", event => {
