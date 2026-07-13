@@ -526,7 +526,10 @@ function setActiveFlow(group) {
 function setupMapInteractions() {
   const nodes = document.querySelectorAll(".js-map-node");
   if (!nodes.length) return;
-  const activate = node => {
+  const setHoverVisualState = (node, isHovered) => {
+    node.classList.toggle("is-hovered", isHovered);
+  };
+  const activateFromIntentionalClick = node => {
     const payload = getMapNodeData(node);
     if (!payload) return;
     updateMapDetail(payload.data);
@@ -534,22 +537,23 @@ function setupMapInteractions() {
   };
   nodes.forEach(node => {
     node.addEventListener("mouseenter", () => {
-      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) activate(node);
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) setHoverVisualState(node, true);
     });
-    node.addEventListener("focus", () => activate(node));
+    node.addEventListener("mouseleave", () => setHoverVisualState(node, false));
+    node.addEventListener("focus", () => setHoverVisualState(node, true));
+    node.addEventListener("blur", () => setHoverVisualState(node, false));
     node.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      activate(node);
+      activateFromIntentionalClick(node);
     });
     node.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        activate(node);
+        activateFromIntentionalClick(node);
       }
     });
   });
-  activate(nodes[0]);
 }
 
 function setupMobileAccordions() {
@@ -872,6 +876,15 @@ const TOUR_STEPS = [
 ];
 const TOUR_TOTAL = TOUR_STEPS.length;
 
+const TOUR_INTRO_DETAIL = {
+  title: "Interactive Tour",
+  color: COLORS.engineer,
+  question: "Use Next, Previous, Reset, or Play All to move through the ecosystem.",
+  work: "The guided controls own this explanation panel. Hovering cards only gives a visual preview and will not change the active tour content.",
+  output: "A stable step-by-step walkthrough from raw sources to business outcomes and AI products.",
+  beginner: "Start with Next or Play All, then watch each section highlight in order.",
+};
+
 let tourStep = 0;
 let tourAutoTimer = null;
 let tourAutoPlaying = false;
@@ -931,6 +944,7 @@ function renderTourStep() {
     setActiveFlow(null);
     emphasizeLayerNode(null);
     document.querySelectorAll(".architect-ribbon.is-active").forEach(el => el.classList.remove("is-active"));
+    updateMapDetail(TOUR_INTRO_DETAIL);
     return;
   }
 

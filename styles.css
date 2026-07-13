@@ -1139,7 +1139,7 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 .ribbon-divider { width: 1px; height: 36px; background: #dbe3f4; flex-shrink: 0; }
 .ribbon-pill { color: #1e2a5a; font-size: 12px; font-weight: 750; white-space: nowrap; }
 .ribbon-note { flex: 1 1 200px; color: #1f2a44; font-size: 12px; line-height: 1.35; }
-.architect-ribbon:hover, .architect-ribbon.is-active {
+.architect-ribbon:hover, .architect-ribbon.is-hovered, .architect-ribbon.is-active {
   border-color: #5b21b6;
   box-shadow: 0 0 0 5px rgba(124,58,237,0.16), 0 22px 60px rgba(79,70,229,0.18);
 }
@@ -1292,12 +1292,12 @@ kbd { background: var(--border); border-radius: 4px; padding: 2px 6px; font-size
 .roles-glance-grid span { display: block; margin-top: 8px; color: #475569; font-size: 11px; line-height: 1.4; }
 
 /* ── Shared hover / active states ── */
-.source-item:hover, .source-item.is-active,
-.ingestion-panel:hover, .ingestion-panel.is-active,
-.platform-panel:hover, .platform-panel.is-active,
-.platform-layer:hover, .platform-layer.is-active,
-.branch-panel:hover, .branch-panel.is-active,
-.outcome-panel:hover, .outcome-panel.is-active,
+.source-item:hover, .source-item.is-hovered, .source-item.is-active,
+.ingestion-panel:hover, .ingestion-panel.is-hovered, .ingestion-panel.is-active,
+.platform-panel:hover, .platform-panel.is-hovered, .platform-panel.is-active,
+.platform-layer:hover, .platform-layer.is-hovered, .platform-layer.is-active,
+.branch-panel:hover, .branch-panel.is-hovered, .branch-panel.is-active,
+.outcome-panel:hover, .outcome-panel.is-hovered, .outcome-panel.is-active,
 .roles-glance-grid button:hover {
   transform: translateY(-2px);
   box-shadow: 0 20px 46px rgba(79,70,229,0.14);
