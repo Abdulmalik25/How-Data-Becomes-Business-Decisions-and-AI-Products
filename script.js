@@ -23,14 +23,14 @@ const ROLE_DATA = {
     title: "Data Architect",
     color: COLORS.architect,
     icon: "architect",
-    question: "How should the data ecosystem be designed, governed, and scaled?",
+    question: "How should the full data ecosystem be designed, governed, and scaled?",
     work: "Defines architecture, data models, governance rules, security standards, platform strategy, and long-term scalability patterns across the full ecosystem.",
-    skills: ["Data Modeling", "Governance", "Security", "Cloud Architecture", "Platform Strategy", "System Design"],
-    tools: ["Snowflake", "Databricks", "BigQuery", "AWS/GCP/Azure", "Terraform", "Draw.io"],
+    skills: ["Data modeling", "System architecture", "Governance", "Security", "Cloud architecture", "Scalability", "Data standards"],
+    tools: ["Databricks", "Snowflake", "BigQuery", "Azure Synapse / Microsoft Fabric", "ER modeling tools", "Data catalog tools", "Cloud platforms"],
     output: "Architecture principles, data models, standards, governance patterns, and platform blueprints.",
     beginner: "The Data Architect designs the map everyone else builds on.",
     sits: "Cross-cutting: guides sources, pipelines, platforms, analytics, ML, AI, and governance.",
-    fit: "You think in systems and want to design the blueprint everyone else builds on.",
+    fit: "You think in systems and want to design the blueprint that data teams build on.",
     workMix: [
       { label: "Architecture", pct: 35, color: COLORS.architect },
       { label: "Governance", pct: 25, color: "#475569" },
@@ -43,14 +43,14 @@ const ROLE_DATA = {
     title: "Data Engineer",
     color: COLORS.engineer,
     icon: "engineer",
-    question: "How do we collect, move, validate, and store data reliably?",
+    question: "How do we collect, move, clean, validate, and store data reliably?",
     work: "Builds ingestion, orchestration, validation, transformation, storage, and automation across batch, streaming, CDC, and lakehouse or warehouse layers.",
-    skills: ["SQL", "Python", "ETL/ELT", "Orchestration", "Data Quality", "Cloud Storage"],
-    tools: ["Airflow", "Spark", "Kafka", "dbt", "Snowflake", "Databricks"],
+    skills: ["SQL", "Python", "ETL / ELT", "Data pipelines", "Orchestration", "Data quality", "Cloud storage", "Distributed processing"],
+    tools: ["Airflow", "Spark / PySpark", "Databricks", "Azure Data Factory", "AWS Glue", "Kafka", "SQL databases", "Lakehouse / Warehouse platforms"],
     output: "Reliable pipelines, clean datasets, and business-ready data layers.",
     beginner: "The Data Engineer makes sure data arrives safely, on time, and in usable shape.",
     sits: "Owns the pipeline/platform zone from sources through Bronze, Silver, Gold, and often semantic-ready layers.",
-    fit: "You like writing code that moves and shapes data reliably behind the scenes.",
+    fit: "You enjoy building reliable pipelines, automation, and backend systems that move data behind the scenes.",
     workMix: [
       { label: "Pipelines", pct: 40, color: COLORS.engineer },
       { label: "Data Quality", pct: 25, color: "#3b82f6" },
@@ -65,12 +65,12 @@ const ROLE_DATA = {
     icon: "analyst",
     question: "What happened, why did it happen, and what should the business do?",
     work: "Queries trusted data, investigates trends, explains drivers, frames business questions, and turns findings into recommendations.",
-    skills: ["SQL", "Excel", "Statistics", "Business Analysis", "Data Storytelling", "Python basics"],
-    tools: ["SQL", "Excel", "Power BI", "Tableau", "Looker", "Python/pandas"],
+    skills: ["SQL", "Excel", "Data cleaning", "Exploratory analysis", "Statistics basics", "Business understanding", "Insight storytelling", "Problem framing"],
+    tools: ["SQL", "Excel / Google Sheets", "Power BI", "Tableau", "Python / Pandas", "Jupyter Notebook"],
     output: "Reports, analysis, insights, recommendations, and decision support.",
     beginner: "The Data Analyst explains what the numbers mean for the business.",
     sits: "Works mainly from Gold data, semantic metrics, KPIs, and business context.",
-    fit: "You enjoy digging into why something happened and explaining it clearly.",
+    fit: "You enjoy finding patterns, explaining numbers, and turning data into clear business recommendations.",
     workMix: [
       { label: "Analysis", pct: 40, color: COLORS.analytics },
       { label: "SQL", pct: 25, color: "#14b88f" },
@@ -83,14 +83,14 @@ const ROLE_DATA = {
     title: "BI Developer",
     color: COLORS.analytics,
     icon: "bi",
-    question: "How are we performing, and how can teams monitor it every day?",
+    question: "How do we turn trusted data into dashboards, KPIs, and reports people use every day?",
     work: "Builds dashboards, KPI systems, semantic models, reporting automation, access-controlled views, and self-serve business intelligence experiences.",
-    skills: ["Power BI/Tableau", "SQL", "DAX or calculated fields", "Semantic Modeling", "UX for Dashboards", "Data Modeling"],
-    tools: ["Power BI", "Tableau", "Looker", "SQL Server", "DAX Studio", "dbt Metrics"],
+    skills: ["Data visualization", "Dashboard design", "KPI design", "DAX / calculated measures", "Semantic modeling", "Report performance", "Stakeholder communication"],
+    tools: ["Power BI", "Tableau", "Looker", "DAX", "Power Query", "SQL", "Semantic models"],
     output: "Dashboards, KPI systems, semantic models, and automated reporting.",
     beginner: "The BI Developer turns trusted data into dashboards teams can use every day.",
     sits: "Works mainly from Gold data, semantic layers, KPIs, and stakeholder reporting needs.",
-    fit: "You like building dashboards and making performance visible.",
+    fit: "You enjoy building dashboards, reports, and performance views that help teams monitor the business.",
     workMix: [
       { label: "Dashboards", pct: 40, color: COLORS.analytics },
       { label: "Semantic Models", pct: 25, color: "#14b88f" },
@@ -105,12 +105,12 @@ const ROLE_DATA = {
     icon: "scientist",
     question: "What is likely to happen next, and what patterns can we model?",
     work: "Explores Silver and Gold data, feature data, event logs, experiments, and external data to build statistical models, forecasts, segments, and predictive insights.",
-    skills: ["Python", "Statistics", "Machine Learning", "Experimentation", "Feature Engineering", "Causal Thinking"],
-    tools: ["Python", "scikit-learn", "Jupyter", "SQL", "MLflow", "PyTorch/TensorFlow"],
+    skills: ["Python", "Statistics", "Machine learning", "Experimentation", "Forecasting", "Feature engineering", "Model evaluation", "Business problem framing"],
+    tools: ["Python", "Pandas", "NumPy", "scikit-learn", "Jupyter Notebook", "SQL", "MLflow", "Visualization libraries"],
     output: "Predictive models, forecasts, experiments, segments, and statistical insights.",
     beginner: "The Data Scientist uses data to predict, test, and discover patterns.",
     sits: "Works across Silver, Gold, feature data, event logs, experiments, and external datasets.",
-    fit: "You are drawn to statistics, prediction, experimentation, and patterns.",
+    fit: "You are drawn to prediction, experimentation, statistics, and solving complex business problems with models.",
     workMix: [
       { label: "Exploration", pct: 25, color: COLORS.mlGroup },
       { label: "Modeling", pct: 35, color: "#f97316" },
@@ -123,14 +123,14 @@ const ROLE_DATA = {
     title: "ML Engineer",
     color: COLORS.mlGroup,
     icon: "ml",
-    question: "How do we deploy, monitor, retrain, and serve models reliably?",
+    question: "How do we deploy, monitor, retrain, and serve machine learning models reliably?",
     work: "Turns models into production services with APIs, CI/CD, containers, monitoring, feature pipelines, retraining workflows, and reliability practices.",
-    skills: ["Python", "APIs", "Docker", "CI/CD", "Model Monitoring", "MLOps"],
-    tools: ["FastAPI", "Docker", "Kubernetes", "MLflow", "Cloud ML Services", "Monitoring tools"],
+    skills: ["Python", "APIs", "Model deployment", "MLOps", "CI/CD", "Monitoring", "Docker", "Cloud deployment", "Model serving"],
+    tools: ["FastAPI", "Docker", "Kubernetes", "MLflow", "GitHub Actions", "Cloud platforms", "Model registry tools", "Monitoring tools"],
     output: "Production ML APIs, model serving systems, monitoring, and retraining pipelines.",
     beginner: "The ML Engineer makes models work safely for real users and real systems.",
     sits: "Connects data science models to production applications, APIs, and monitoring loops.",
-    fit: "You want models running in production, not just notebooks.",
+    fit: "You want to take models out of notebooks and make them run reliably in production systems.",
     workMix: [
       { label: "Deployment", pct: 35, color: COLORS.mlGroup },
       { label: "APIs/CI-CD", pct: 25, color: "#f97316" },
@@ -143,14 +143,14 @@ const ROLE_DATA = {
     title: "AI Engineer",
     color: COLORS.ai,
     icon: "ai",
-    question: "How do we build useful AI products with company data and LLMs?",
+    question: "How do we build useful AI products with company data, documents, APIs, and LLMs?",
     work: "Builds LLM applications using RAG, vector databases, tool calling, agents, evaluations, guardrails, APIs, deployment, and monitoring.",
-    skills: ["Python", "LLM APIs", "RAG", "Vector Databases", "Tool Calling", "Evaluation"],
-    tools: ["OpenAI/LLM APIs", "LangChain/LlamaIndex", "Vector DBs", "FastAPI", "Eval frameworks", "Observability"],
+    skills: ["Python", "LLM application development", "Prompt design", "RAG", "Vector search", "API integration", "Tool calling", "Evaluation", "Guardrails"],
+    tools: ["OpenAI / LLM APIs", "LangChain / LlamaIndex", "Vector databases", "FastAPI", "Python", "Embedding models", "RAG pipelines", "Evaluation tools"],
     output: "Chatbots, RAG apps, copilots, agents, AI workflows, and AI products.",
     beginner: "The AI Engineer turns company knowledge and LLMs into usable AI software.",
     sits: "Uses Gold data, documents, APIs, knowledge sources, vector databases, and LLMs.",
-    fit: "You want to build AI-powered products and workflows.",
+    fit: "You want to build AI-powered products, chatbots, copilots, agents, and intelligent workflows.",
     workMix: [
       { label: "AI Apps", pct: 35, color: COLORS.ai },
       { label: "RAG/Agents", pct: 25, color: "#8b5cf6" },
@@ -523,6 +523,36 @@ function setActiveFlow(group) {
   });
 }
 
+function getTourStepIndexForMapNode(node) {
+  if (!node) return -1;
+  const nodeId = node.dataset.nodeId;
+  const mapKey = node.dataset.mapKey;
+  const section = node.dataset.section;
+  const detail = node.dataset.detail;
+  if (nodeId && nodeId.startsWith("source-")) return 0;
+
+  const directMatches = {
+    architect: 10,
+    ingestion: 1,
+    platform: 2,
+    bronze: 2,
+    silver: 3,
+    gold: 4,
+    semantic: 5,
+    analyticsBranch: 6,
+    mlBranch: 7,
+    aiBranch: 8,
+    stakeholders: 9,
+    sources: 0,
+    lakehouse: 2,
+  };
+
+  for (const value of [nodeId, mapKey, section, detail]) {
+    if (value && Object.prototype.hasOwnProperty.call(directMatches, value)) return directMatches[value];
+  }
+  return -1;
+}
+
 function setupMapInteractions() {
   const nodes = document.querySelectorAll(".js-map-node");
   if (!nodes.length) return;
@@ -530,6 +560,13 @@ function setupMapInteractions() {
     node.classList.toggle("is-hovered", isHovered);
   };
   const activateFromIntentionalClick = node => {
+    const stepIndex = getTourStepIndexForMapNode(node);
+    if (stepIndex >= 0) {
+      tourStep = stepIndex + 1;
+      renderTourStep();
+      return;
+    }
+
     const payload = getMapNodeData(node);
     if (!payload) return;
     updateMapDetail(payload.data);
@@ -623,8 +660,8 @@ function renderCompareTable() {
   if (!wrap) return;
   const rows = ROLE_ORDER.map(key => {
     const r = ROLE_DATA[key];
-    const topSkills = r.skills.slice(0, 4).map(s => `<span class="compare-tag" style="background:${r.color}15;color:${r.color}">${s}</span>`).join("");
-    const topTools = r.tools.slice(0, 3).map(t => `<span class="compare-tag">${t}</span>`).join("");
+    const topSkills = r.skills.slice(0, 5).map(s => `<span class="compare-tag" style="background:${r.color}15;color:${r.color}">${s}</span>`).join("");
+    const topTools = r.tools.slice(0, 5).map(t => `<span class="compare-tag">${t}</span>`).join("");
     return `
       <tr>
         <td data-label="Role"><div class="compare-role-cell" style="color:${r.color}">${iconSVGString(r.icon, 18, r.color)}<span>${r.title}</span></div></td>
@@ -758,21 +795,6 @@ function addFlowPath(layer, id, fromRect, toRect, cls, flow) {
   return path;
 }
 
-function spawnAmbientParticle(layer, pathId, dotClass, dur, delay) {
-  if (!document.getElementById(pathId)) return;
-  const circle = document.createElementNS(SVG_NS, "circle");
-  circle.setAttribute("r", "4");
-  circle.setAttribute("class", `flow-dot ${dotClass}`);
-  const anim = document.createElementNS(SVG_NS, "animateMotion");
-  anim.setAttribute("dur", `${dur}s`);
-  anim.setAttribute("repeatCount", "indefinite");
-  anim.setAttribute("begin", `${delay}s`);
-  const mpath = document.createElementNS(SVG_NS, "mpath");
-  mpath.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${pathId}`);
-  anim.appendChild(mpath);
-  circle.appendChild(anim);
-  layer.appendChild(circle);
-}
 
 function computeConnectors() {
   const svg = document.getElementById("flow-svg");
@@ -812,17 +834,9 @@ function computeConnectors() {
   addFlowPath(connLayer, "conn-ml-outcome", mlBranchRect, outcomesRect, "ml-path", "stakeholders");
   addFlowPath(connLayer, "conn-ai-outcome", aiBranchRect, outcomesRect, "ai-path", "stakeholders");
 
-  if (!prefersReducedMotionNow()) {
-    spawnAmbientParticle(particleLayer, "conn-source-3", "source-dot", 4.8, 0);
-    spawnAmbientParticle(particleLayer, "conn-source-8", "source-dot", 5.4, 0.8);
-    spawnAmbientParticle(particleLayer, "conn-ingestion-platform", "engineer-dot", 3.2, 0);
-    spawnAmbientParticle(particleLayer, "conn-platform-analytics", "analytics-dot", 4.2, 0.2);
-    spawnAmbientParticle(particleLayer, "conn-platform-ml", "ml-dot", 4.2, 0.5);
-    spawnAmbientParticle(particleLayer, "conn-platform-ai", "ai-dot", 4.2, 0.9);
-    spawnAmbientParticle(particleLayer, "conn-analytics-outcome", "analytics-dot", 3.6, 0.3);
-    spawnAmbientParticle(particleLayer, "conn-ml-outcome", "ml-dot", 3.6, 0.6);
-    spawnAmbientParticle(particleLayer, "conn-ai-outcome", "ai-dot", 3.6, 1.0);
-  }
+
+  // Keep connector paths clean by default. The tour adds a single purposeful
+  // emphasis dot per active step instead of ambient dots floating around.
 
   // Re-apply whatever flow was highlighted before the rebuild (paths were wiped above)
   if (currentFlowGroup) setActiveFlow(currentFlowGroup);
@@ -858,13 +872,51 @@ function setupConnectorLifecycle() {
 // its connector, auto-scrolls the wide canvas to bring it into view, and
 // updates the always-visible explanation bar.
 // ═══════════════════════════════════════════════════════
+const LAYER_TOUR_DETAILS = {
+  bronze: {
+    title: "Bronze Layer",
+    color: COLORS.engineer,
+    icon: "engineer",
+    question: "What is stored first after ingestion?",
+    work: "Bronze keeps raw or lightly processed data close to the source shape so teams have a recoverable landing zone and an audit trail.",
+    output: "Raw source-aligned tables, files, or event data ready for cleaning and validation.",
+    beginner: "Bronze is the first trusted landing area: keep the original data before improving it.",
+  },
+  silver: {
+    title: "Silver Layer",
+    color: COLORS.engineer,
+    icon: "engineer",
+    question: "How does raw data become clean and usable?",
+    work: "Silver removes duplicates, fixes types, standardizes fields, joins related data, and applies validation rules so downstream teams can use it safely.",
+    output: "Cleaned, validated, and conformed datasets for analytics, BI, ML, and AI use cases.",
+    beginner: "Silver is where messy data becomes consistent and reliable enough to work with.",
+  },
+  gold: {
+    title: "Gold Layer",
+    color: COLORS.engineer,
+    icon: "engineer",
+    question: "How does clean data become business-ready?",
+    work: "Gold organizes trusted data around business entities, KPIs, facts, dimensions, and use cases so teams can answer business questions faster.",
+    output: "Business-ready datasets for dashboards, reports, analysis, experiments, and model features.",
+    beginner: "Gold is the layer people usually trust for decisions because it is shaped around business meaning.",
+  },
+  semantic: {
+    title: "Semantic Layer",
+    color: COLORS.engineer,
+    icon: "engineer",
+    question: "How do teams agree on the same metrics and logic?",
+    work: "The semantic layer defines reusable metrics, KPI formulas, dimensions, access rules, and business logic so tools and teams speak the same language.",
+    output: "Consistent metrics, KPIs, reusable definitions, and governed business logic for analytics, BI, ML, and AI products.",
+    beginner: "Semantic means everyone calculates important numbers the same way instead of inventing a new version in every dashboard.",
+  },
+};
 const TOUR_STEPS = [
   { label: "Data Sources", flowGroup: "sources", scrollTo: '[data-node-id="source-1"]', detail: { type: "section", key: "sources" } },
   { label: "Ingestion & Orchestration", flowGroup: "ingestion", scrollTo: '[data-node-id="ingestion"]', detail: { type: "section", key: "ingestion" } },
-  { label: "Bronze Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="bronze"]', emphasizeNode: "bronze", detail: { type: "section", key: "lakehouse" } },
-  { label: "Silver Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="silver"]', emphasizeNode: "silver", detail: { type: "section", key: "lakehouse" } },
-  { label: "Gold Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="gold"]', emphasizeNode: "gold", detail: { type: "section", key: "lakehouse" } },
-  { label: "Semantic Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="semantic"]', emphasizeNode: "semantic", detail: { type: "section", key: "lakehouse" } },
+  { label: "Bronze Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="bronze"]', emphasizeNode: "bronze", detailData: LAYER_TOUR_DETAILS.bronze },
+  { label: "Silver Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="silver"]', emphasizeNode: "silver", detailData: LAYER_TOUR_DETAILS.silver },
+  { label: "Gold Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="gold"]', emphasizeNode: "gold", detailData: LAYER_TOUR_DETAILS.gold },
+  { label: "Semantic Layer", flowGroup: "ingestion", scrollTo: '[data-node-id="semantic"]', emphasizeNode: "semantic", detailData: LAYER_TOUR_DETAILS.semantic },
   { label: "Analytics / BI Branch", flowGroup: "analyticsBranch", scrollTo: '[data-node-id="analyticsBranch"]', detail: { type: "section", key: "analyticsBranch" } },
   { label: "Machine Learning Branch", flowGroup: "mlBranch", scrollTo: '[data-node-id="mlBranch"]', detail: { type: "section", key: "mlBranch" } },
   { label: "AI Products Branch", flowGroup: "aiBranch", scrollTo: '[data-node-id="aiBranch"]', detail: { type: "section", key: "aiBranch" } },
@@ -953,7 +1005,9 @@ function renderTourStep() {
   emphasizeLayerNode(step.emphasizeNode || null);
   document.querySelector(".architect-ribbon").classList.toggle("is-active", step.flowGroup === "architect");
 
-  if (step.detail) {
+  if (step.detailData) {
+    updateMapDetail(step.detailData);
+  } else if (step.detail) {
     const data = step.detail.type === "role" ? getDetailData(step.detail.key) : getSectionData(step.detail.key);
     if (data) updateMapDetail(data);
   }
