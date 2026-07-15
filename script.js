@@ -220,14 +220,35 @@ const SECTION_DATA = {
 const ROLE_ORDER = ["architect", "engineer", "analyst", "bi", "scientist", "ml", "ai"];
 
 const MOBILE_STEPS = [
-  { key: "sources", title: "1. Where data begins", color: COLORS.engineer, text: "Apps, databases, APIs, CRM, payments, events, files, spreadsheets, and documents create raw source data." },
-  { key: "ingestion", title: "2. How data is collected", color: COLORS.engineer, role: "engineer", text: "Ingestion collects data through batch jobs, streaming pipelines, CDC, scheduling, and validation checks." },
-  { key: "engineer", title: "3. How data is engineered", color: COLORS.engineer, role: "engineer", text: "Data Engineers automate movement, quality checks, orchestration, and storage so data becomes reliable." },
-  { key: "lakehouse", title: "4. How data becomes Bronze/Silver/Gold/Semantic", color: COLORS.engineer, text: "Bronze keeps raw data, Silver cleans and validates it, Gold prepares business-ready data, and the semantic layer defines trusted KPIs and reusable logic." },
-  { key: "analyticsBranch", title: "5. How Analytics/BI uses it", color: COLORS.analytics, roles: ["analyst", "bi"], text: "Data Analysts and BI Developers turn trusted Gold data and semantic metrics into dashboards, reports, KPIs, insights, and recommendations." },
-  { key: "mlBranch", title: "6. How Machine Learning uses it", color: COLORS.mlGroup, roles: ["scientist", "ml"], text: "Data Scientists model patterns from Silver, Gold, feature, event, and external data; ML Engineers deploy APIs, monitoring, CI/CD, and retraining workflows." },
-  { key: "aiBranch", title: "7. How AI Products use it", color: COLORS.ai, role: "ai", text: "AI Engineers combine Gold data, documents, APIs, vector databases, LLMs, tool calling, agents, evaluations, guardrails, and deployment patterns." },
-  { key: "stakeholders", title: "8. How business teams benefit", color: COLORS.outcomes, role: "stakeholders", text: "Executives, managers, product teams, sales, marketing, operations, and customers use the outputs for decisions, growth, savings, automation, and better experiences." },
+  { key: "sources", title: "1. Where data begins", color: COLORS.engineer, icon: "engineer", text: "Apps, databases, APIs, CRM, payments, events, files, spreadsheets, and documents create raw source data." },
+  { key: "ingestion", title: "2. How data is collected", color: COLORS.engineer, icon: "engineer", role: "engineer", text: "Ingestion collects data through batch jobs, streaming pipelines, CDC, scheduling, and validation checks." },
+  { key: "engineer", title: "3. How data is engineered", color: COLORS.engineer, icon: "engineer", role: "engineer", text: "Data Engineers automate movement, quality checks, orchestration, and storage so data becomes reliable." },
+  { key: "lakehouse", title: "4. How data becomes Bronze/Silver/Gold/Semantic", color: COLORS.engineer, icon: "engineer", text: "Bronze keeps raw data, Silver cleans and validates it, Gold prepares business-ready data, and the semantic layer defines trusted KPIs and reusable logic." },
+  { key: "analyticsBranch", title: "5. How Analytics/BI uses it", color: COLORS.analytics, icon: "bi", roles: ["analyst", "bi"], text: "Data Analysts and BI Developers turn trusted Gold data and semantic metrics into dashboards, reports, KPIs, insights, and recommendations." },
+  { key: "mlBranch", title: "6. How Machine Learning uses it", color: COLORS.mlGroup, icon: "scientist", roles: ["scientist", "ml"], text: "Data Scientists model patterns from Silver, Gold, feature, event, and external data; ML Engineers deploy APIs, monitoring, CI/CD, and retraining workflows." },
+  { key: "aiBranch", title: "7. How AI Products use it", color: COLORS.ai, icon: "ai", role: "ai", text: "AI Engineers combine Gold data, documents, APIs, vector databases, LLMs, tool calling, agents, evaluations, guardrails, and deployment patterns." },
+  { key: "stakeholders", title: "8. How business teams benefit", color: COLORS.outcomes, icon: "stakeholders", role: "stakeholders", text: "Executives, managers, product teams, sales, marketing, operations, and customers use the outputs for decisions, growth, savings, automation, and better experiences." },
+];
+
+// Small, visual sub-item lists used to render the "sources" and "lakehouse"
+// mobile steps as real diagram boxes instead of a single paragraph of text —
+// this is what makes the vertical mobile flow actually read as a diagram.
+const MOBILE_SOURCE_ITEMS = [
+  { code: "AP", label: "Apps", sub: "Web / Mobile" },
+  { code: "DB", label: "Databases", sub: "SQL / NoSQL" },
+  { code: "API", label: "APIs", sub: "REST / GraphQL" },
+  { code: "CRM", label: "CRM", sub: "Customers" },
+  { code: "PAY", label: "Payments", sub: "Transactions" },
+  { code: "EV", label: "Events", sub: "Logs / Clicks" },
+  { code: "CSV", label: "Files", sub: "CSV / Excel / JSON" },
+  { code: "SH", label: "Spreadsheets", sub: "Google Sheets" },
+  { code: "DOC", label: "Documents", sub: "PDF / DOC / TXT" },
+];
+const MOBILE_LAYER_ITEMS = [
+  { code: "BR", label: "Bronze Layer", sub: "Raw Data", color: "#f97316" },
+  { code: "SI", label: "Silver Layer", sub: "Cleaned Data", color: "#2563eb" },
+  { code: "GO", label: "Gold Layer", sub: "Business Data", color: "#f59e0b" },
+  { code: "SE", label: "Semantic Layer", sub: "Metrics & KPIs", color: "#7c3aed" },
 ];
 
 const QUIZ_QUESTIONS = [
@@ -469,25 +490,86 @@ function hideTooltip() {
 function renderMobileStory() {
   const wrap = document.getElementById("ecosystem-mobile");
   if (!wrap) return;
-  wrap.innerHTML = MOBILE_STEPS.map((step, index) => {
+
+  const architect = ROLE_DATA.architect;
+  const architectBanner = `
+    <button class="mobile-architect-banner js-detail" type="button" data-detail="architect" style="--step-color:${architect.color}">
+      <span class="mobile-architect-icon">${iconSVGString(architect.icon, 20, "#fff")}</span>
+      <span class="mobile-architect-copy">
+        <strong>Data Architect Zone</strong>
+        <small>Cross-cutting — guides the full data ecosystem below</small>
+      </span>
+    </button>
+    <span class="mobile-connector" aria-hidden="true">${mobileConnectorSVG(architect.color)}</span>
+  `;
+
+  const cards = MOBILE_STEPS.map((step, index) => {
     const roles = step.roles || (step.role ? [step.role] : []);
     const buttons = roles.map(key => {
       const data = getDetailData(key);
       return `<button class="mobile-role-link js-detail" type="button" data-detail="${key}" style="--step-color:${data.color}">${data.title}</button>`;
     }).join("");
+
+    let visualGrid = "";
+    if (step.key === "sources") {
+      visualGrid = `<div class="mobile-node-grid">${MOBILE_SOURCE_ITEMS.map(s => `
+        <div class="mobile-node-box" style="--box-color:${step.color}">
+          <span class="mobile-node-code">${s.code}</span>
+          <strong>${s.label}</strong>
+          <small>${s.sub}</small>
+        </div>`).join("")}</div>`;
+    }
+    if (step.key === "lakehouse") {
+      visualGrid = `<div class="mobile-layer-stack">${MOBILE_LAYER_ITEMS.map((l, i) => `
+        ${i > 0 ? `<span class="mobile-layer-arrow" aria-hidden="true">↓</span>` : ""}
+        <div class="mobile-node-box wide" style="--box-color:${l.color}">
+          <span class="mobile-node-code">${l.code}</span>
+          <strong>${l.label}</strong>
+          <small>${l.sub}</small>
+        </div>`).join("")}</div>`;
+    }
+
+    const connector = index < MOBILE_STEPS.length - 1
+      ? `<span class="mobile-connector" aria-hidden="true">${mobileConnectorSVG(MOBILE_STEPS[index + 1].color)}</span>`
+      : "";
+
     return `
       <article class="mobile-step-card${index === 0 ? " is-open" : ""}" style="--step-color:${step.color}" data-mobile-step="${step.key}">
         <span class="mobile-step-line"></span>
         <button class="mobile-step-toggle" type="button" aria-expanded="${index === 0 ? "true" : "false"}">
+          <span class="mobile-step-icon">${iconSVGString(step.icon, 16, step.color)}</span>
           <h3>${step.title}</h3>
         </button>
         <div class="mobile-step-body">
           <p>${step.text}</p>
+          ${visualGrid}
           ${buttons ? `<div class="mobile-role-row">${buttons}</div>` : ""}
         </div>
       </article>
+      ${connector}
     `;
   }).join("");
+
+  wrap.innerHTML = architectBanner + cards;
+
+  const architectBtn = wrap.querySelector(".mobile-architect-banner");
+  if (architectBtn) {
+    architectBtn.addEventListener("click", () => openDetail("architect"));
+    architectBtn.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openDetail("architect"); }
+    });
+  }
+}
+
+// Small reusable downward arrow connector drawn between vertically-stacked
+// diagram nodes on mobile — this is the "restructure the horizontal diagram
+// vertically" piece: every step is visually chained to the next, matching
+// the connector language already used on the desktop canvas.
+function mobileConnectorSVG(color) {
+  return `<svg viewBox="0 0 24 28" width="16" height="20" aria-hidden="true">
+    <path d="M12 2 L12 20" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" opacity="0.55" />
+    <path d="M5 15 L12 24 L19 15" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+  </svg>`;
 }
 
 function getMapNodeData(node) {
